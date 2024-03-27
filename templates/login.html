@@ -1,0 +1,12 @@
+<title>Kirjaudu sisään</title>
+<form action="/login" method="post">
+Käyttäjätunnus: <input type="text" name="username" value="{{ username }}">
+<br>
+Salasana: <input type="password" name="password">
+<br>
+<input type="submit" value="Kirjaudu sisään">
+</form>
+
+{% if error_message %}
+{{ error_message }}
+{% endif %}

@@ -1,0 +1,5 @@
+.env
+.venv
+__pycache__
+#Personal file that clears all tables from database
+anti_schema.sql
