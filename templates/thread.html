@@ -1,0 +1,9 @@
+<h1>{{ topic }}</h1>
+{{ thread.subject }}
+<hr>
+{% for message in messages %}
+{{ message.creator_name }} - {{ message.created_at }}
+<br>
+{{ message.content }}
+<hr>
+{% endfor %}

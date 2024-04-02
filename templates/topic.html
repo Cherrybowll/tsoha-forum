@@ -1,0 +1,7 @@
+<title>Aiheet</title>
+{% for thread in threads %}
+{{ thread.subject }}, julkaissut {{ thread.creator_name }} {{ thread.created_at }}
+<br>
+<a href={{ url_for("open_thread", topic_name=topic.name, thread_id=thread.id) }}>Siirry ketjuun</a>
+<hr>
+{% endfor %}

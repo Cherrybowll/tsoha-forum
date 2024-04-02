@@ -9,9 +9,9 @@ CREATE TABLE users (
 
 CREATE TABLE topics (
     id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-    topic TEXT,
+    name TEXT UNIQUE,
     access_group INTEGER[],
-    visibility BOOLEAN
+    visibility BOOLEAN DEFAULT TRUE
 );
 
 CREATE TABLE threads (

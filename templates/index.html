@@ -1,9 +1,17 @@
-<a href="/register">Rekisteröidy</a>
-<hr>
 {% if session.user_id %}
 Olet kirjautuneena käyttäjänä {{ session.username }}
 <br>
-<a href="/logout">Kirjaudu ulos</a>
+<a href={{ url_for("logout") }}>Kirjaudu ulos</a>
 {% else %}
-<a href="/login">Kirjaudu sisään</a>
+<a href={{ url_for("login") }}>Kirjaudu sisään</a>
+<hr>
+<a href={{ url_for("register") }}>Rekisteröidy</a>
 {% endif %}
+
+<hr>
+{% for topic in topics %}
+{{ topic.name }}
+<br>
+<a href={{ url_for("open_topic",topic_name=topic.name) }}>Siirry aiheeseen</a>
+<hr>
+{% endfor %}
