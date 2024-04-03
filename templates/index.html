@@ -1,10 +1,12 @@
+<title>Etusivu</title>
+<h1>Tervetuloa sivulle!</h1>
 {% if session.user_id %}
 Olet kirjautuneena käyttäjänä {{ session.username }}
 <br>
 <a href={{ url_for("logout") }}>Kirjaudu ulos</a>
 {% else %}
 <a href={{ url_for("login") }}>Kirjaudu sisään</a>
-<hr>
+<br>
 <a href={{ url_for("register") }}>Rekisteröidy</a>
 {% endif %}
 

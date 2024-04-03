@@ -3,6 +3,9 @@ from flask import session
 from sqlalchemy.sql import text
 from werkzeug.security import generate_password_hash, check_password_hash
 
+def user_id():
+    return session.get("user_id", 0)
+
 def login(username, password):
     sql = text("SELECT id, password, admin_role FROM users WHERE name=:username")
     result = db.session.execute(sql, {"username":username})
