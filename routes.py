@@ -35,7 +35,8 @@ def open_topic(topic_name):
         return render_template("topic.html", threads=threads, topic=topic)
     if request.method == "POST":
         new_thread_name = request.form["new_thread_name"]
-        discussion.add_thread(new_thread_name, users.user_id(), topic.id)
+        new_thread_content = request.form["new_thread_content"]
+        discussion.add_thread(new_thread_name, new_thread_content, users.user_id(), topic.id)
         return redirect(url_for("open_topic", topic_name=topic.name))
 
 @app.route("/forum/<string:topic_name>/<int:thread_id>", methods=["GET", "POST"])

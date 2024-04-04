@@ -5,6 +5,8 @@
 <a href={{ url_for("open_topic", topic_name=topic.name)}}>Palaa aihe-sivulle {{ topic.name }}</a>
 <hr>
 <b>{{ thread.creator_id }}</b>: {{ thread.subject }}
+<br>
+{{ thread.content }}
 <hr>
 {% for message in messages %}
 <b>{{ message.creator_name }}</b> - {{ message.created_at }}

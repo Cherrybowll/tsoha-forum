@@ -17,6 +17,7 @@ CREATE TABLE topics (
 CREATE TABLE threads (
     id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     subject TEXT,
+    content TEXT,
     creator_id INT REFERENCES users,
     topic_id INT REFERENCES topics ON DELETE CASCADE,
     created_at TIMESTAMP

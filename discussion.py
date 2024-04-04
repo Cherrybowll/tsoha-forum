@@ -8,7 +8,7 @@ def get_topics():
     return result.fetchall()
 
 def get_threads(topic_id):
-    sql = text("SELECT t.id, t.subject, t.created_at, u.name AS creator_name FROM threads t LEFT JOIN users u ON t.creator_id=u.id WHERE t.topic_id=:topic_id ORDER BY t.created_at")
+    sql = text("SELECT t.id, t.subject, t.content, t.created_at, u.name AS creator_name FROM threads t LEFT JOIN users u ON t.creator_id=u.id WHERE t.topic_id=:topic_id ORDER BY t.created_at")
     result = db.session.execute(sql, {"topic_id":topic_id})
     return result.fetchall()
 
@@ -29,7 +29,7 @@ def get_topic_entry(topic_name="", topic_id=0):
     return result.fetchone()
 
 def get_thread_entry(thread_id):
-    sql = text("SELECT id, subject, creator_id, created_at FROM threads WHERE id=:thread_id")
+    sql = text("SELECT id, subject, content, creator_id, created_at FROM threads WHERE id=:thread_id")
     result = db.session.execute(sql, {"thread_id":thread_id})
     return result.fetchone()
 
@@ -39,9 +39,9 @@ def add_message(content, creator_id, thread_id, topic_id):
     db.session.commit()
     return
 
-def add_thread(subject, creator_id, topic_id):
-    sql = text("INSERT INTO threads (subject, creator_id, topic_id, created_at) VALUES (:subject, :creator_id, :topic_id, NOW())")
-    db.session.execute(sql, {"subject":subject, "creator_id":creator_id, "topic_id":topic_id})
+def add_thread(subject, content, creator_id, topic_id):
+    sql = text("INSERT INTO threads (subject, content, creator_id, topic_id, created_at) VALUES (:subject, :content, :creator_id, :topic_id, NOW())")
+    db.session.execute(sql, {"subject":subject, "content":content, "creator_id":creator_id, "topic_id":topic_id})
     db.session.commit()
     return
 
