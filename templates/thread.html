@@ -3,12 +3,15 @@
 <a href={{ url_for("index") }}>Palaa etusivulle</a>
 <br>
 <a href={{ url_for("open_topic", topic_name=topic.name)}}>Palaa aihe-sivulle {{ topic.name }}</a>
-{{ thread.subject }}
+<hr>
+<b>{{ thread.creator_id }}</b>: {{ thread.subject }}
 <hr>
 {% for message in messages %}
-{{ message.creator_name }} - {{ message.created_at }}
+<b>{{ message.creator_name }}</b> - {{ message.created_at }}
 <br>
 {{ message.content }}
+<br>
+<a href={{ url_for("delete", topic_id=topic.id, thread_id=thread.id, message_id=message.id) }}>Poista viesti</a>
 <hr>
 {% endfor %}
 <form action={{ url_for("open_thread", thread_id=thread.id, topic_name=topic.name) }} method="post">

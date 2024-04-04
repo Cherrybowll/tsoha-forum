@@ -3,10 +3,15 @@ from flask import redirect, render_template, request, url_for
 import users
 import discussion
 
-@app.route("/")
+@app.route("/", methods=["GET", "POST"])
 def index():
-    topics = discussion.get_topics()
-    return render_template("index.html", topics=topics)
+    if request.method == "GET":
+        topics = discussion.get_topics()
+        return render_template("index.html", topics=topics)
+    if request.method == "POST":
+        new_topic_name = request.form["new_topic_name"]
+        discussion.add_topic(new_topic_name, [0])
+        return redirect(url_for("index"))
 
 @app.route("/login",methods=["GET", "POST"])
 def login():
@@ -23,7 +28,7 @@ def login():
 
 @app.route("/forum/<string:topic_name>", methods=["GET", "POST"])
 def open_topic(topic_name):
-    topic = discussion.get_topic_entry(topic_name)
+    topic = discussion.get_topic_entry(topic_name=topic_name)
     threads = discussion.get_threads(topic.id)
     #TODO: check user topic access rights
     if request.method == "GET":
@@ -35,7 +40,7 @@ def open_topic(topic_name):
 
 @app.route("/forum/<string:topic_name>/<int:thread_id>", methods=["GET", "POST"])
 def open_thread(thread_id, topic_name):
-    topic = discussion.get_topic_entry(topic_name)
+    topic = discussion.get_topic_entry(topic_name=topic_name)
     thread = discussion.get_thread_entry(thread_id)
     messages = discussion.get_messages(thread_id)
     #TODO: ensure that id for topic matches thread's topic_id
@@ -46,6 +51,20 @@ def open_thread(thread_id, topic_name):
         new_content = request.form["new_message"]
         discussion.add_message(new_content, users.user_id(), thread.id, topic.id)
         return redirect(url_for("open_thread", thread_id=thread.id, topic_name=topic.name))
+
+@app.route("/delete/<int:topic_id>/<int:thread_id>/<int:message_id>")
+def delete(topic_id, thread_id, message_id):
+    #Get topic name for URL translation
+    topic_name = discussion.get_topic_entry(topic_id=topic_id).name
+    #Check which parameters are not 0 to determine which level (topic/thread/message) to delete
+    if message_id != 0:
+        discussion.delete_message(message_id)
+        return redirect(url_for("open_thread", thread_id=thread_id, topic_name=topic_name))
+    if thread_id != 0:
+        discussion.delete_thread(thread_id)
+        return redirect(url_for("open_topic", topic_name=topic_name))
+    discussion.hide_topic(topic_id)
+    return redirect(url_for("index"))
 
 @app.route("/register",methods=["GET", "POST"])
 def register():

@@ -14,6 +14,12 @@ Olet kirjautuneena käyttäjänä {{ session.username }}
 {% for topic in topics %}
 {{ topic.name }}
 <br>
-<a href={{ url_for("open_topic",topic_name=topic.name) }}>Siirry aiheeseen</a>
+<a href={{ url_for("open_topic",topic_name=topic.name) }}>Siirry aiheeseen</a> 
+<a href={{ url_for("delete", topic_id=topic.id, thread_id=0, message_id=0) }}>Poista aihe</a>
 <hr>
 {% endfor %}
+<form action={{ url_for("index") }} method="POST">
+<input type="text" name="new_topic_name">
+<br>
+<input type="submit" value="Lisää aihe">
+</form>

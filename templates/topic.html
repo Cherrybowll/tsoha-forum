@@ -3,9 +3,10 @@
 <a href={{ url_for("index") }}>Palaa etusivulle</a>
 <hr>
 {% for thread in threads %}
-{{ thread.subject }}, julkaissut {{ thread.creator_name }} {{ thread.created_at }}
+{{ thread.subject }}, julkaissut <b>{{ thread.creator_name }}</b> {{ thread.created_at }}
 <br>
-<a href={{ url_for("open_thread", topic_name=topic.name, thread_id=thread.id) }}>Siirry ketjuun</a>
+<a href={{ url_for("open_thread", topic_name=topic.name, thread_id=thread.id) }}>Siirry ketjuun</a> 
+<a href={{ url_for("delete", topic_id=topic.id, thread_id=thread.id, message_id=0) }}>Poista ketju</a>
 <hr>
 {% endfor %}
 <form action={{ url_for("open_topic", topic_name=topic.name) }} method="post">

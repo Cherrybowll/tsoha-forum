@@ -18,7 +18,7 @@ CREATE TABLE threads (
     id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     subject TEXT,
     creator_id INT REFERENCES users,
-    topic_id INT REFERENCES topics,
+    topic_id INT REFERENCES topics ON DELETE CASCADE,
     created_at TIMESTAMP
 );
 
@@ -26,7 +26,7 @@ CREATE TABLE messages (
     id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     content TEXT,
     creator_id INT REFERENCES users,
-    thread_id INT REFERENCES threads,
+    thread_id INT REFERENCES threads ON DELETE CASCADE,
     topic_id INT REFERENCES topics,
     created_at TIMESTAMP
 );

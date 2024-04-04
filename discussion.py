@@ -17,9 +17,15 @@ def get_messages(thread_id):
     result = db.session.execute(sql, {"thread_id":thread_id})
     return result.fetchall()
 
-def get_topic_entry(topic_name):
-    sql = text("SELECT id, name, access_group, visibility FROM topics WHERE name=:topic_name")
-    result = db.session.execute(sql, {"topic_name":topic_name})
+#Get topic entry by name or id, searches with name if id is not specified
+#Both options needed for the quirky URL system
+def get_topic_entry(topic_name="", topic_id=0):
+    if topic_id != 0:
+        sql = text("SELECT id, name, access_group, visibility FROM topics WHERE id=:topic_id")
+        result = db.session.execute(sql, {"topic_id":topic_id})
+    else:
+        sql = text("SELECT id, name, access_group, visibility FROM topics WHERE name=:topic_name")
+        result = db.session.execute(sql, {"topic_name":topic_name})
     return result.fetchone()
 
 def get_thread_entry(thread_id):
@@ -39,8 +45,26 @@ def add_thread(subject, creator_id, topic_id):
     db.session.commit()
     return
 
-def add_topic(name, access_group, visibility):
-    sql = text("INSERT INTO topics (name, access_group, visibility) VALUES (:name, :access_group, :vsibility)")
-    db.session.execute(sql, {"name":name, "access_group":access_group, "visibility":visibility})
+def add_topic(name, access_group):
+    sql = text("INSERT INTO topics (name, access_group) VALUES (:name, :access_group)")
+    db.session.execute(sql, {"name":name, "access_group":access_group})
     db.session.commit()
-    return               
+    return
+
+def delete_message(message_id):
+    sql = text("DELETE FROM messages WHERE id=:message_id")
+    db.session.execute(sql, {"message_id":message_id})
+    db.session.commit()
+    return
+
+def delete_thread(thread_id):
+    sql = text("DELETE FROM threads WHERE id=:thread_id")
+    db.session.execute(sql, {"thread_id":thread_id})
+    db.session.commit()
+    return
+
+def hide_topic(topic_id):
+    sql = text("UPDATE topics SET visibility=FALSE WHERE id=:topic_id")
+    db.session.execute(sql, {"topic_id":topic_id})
+    db.session.commit()
+    return
