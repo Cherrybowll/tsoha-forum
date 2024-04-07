@@ -1,4 +1,33 @@
 # Keskustelusovellus
+
+### Nykytila ja tämänhetkiset käyttöhjeet (toinen välipalautus 7.4)
+
+Sovelluksen saat käyttöösi seuraavasti:
+Ensiksi kloonaa tämän Github-repositorio omalle laitteellesi ja luo sen juurihakemistoon `.env`-niminen tiedosto, jonka tulee sisältää seuraavat rivit:
+```
+DATABASE_URL=<tietokannan-paikallinen-osoite>
+SECRET_KEY=<salainen-avain>
+```
+Seuraavaksi aktivoi virtuaaliympäristö (yhä repositorion juurihakemistossa) ja asenna riippuvuudet komennoilla:
+```
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r ./requirements.txt
+```
+Määritä tietokannan skeema ja luo ylläpitäjä-käyttäjä 'admin' salasanalla 'admin' komennolla:
+```
+psql < schema.sql
+```
+Nyt voit käynnistää sovelluksen komennolla:
+```
+flask run
+```
+Sovelluksen nykytilasta mainittakoon, että en ole saanut sovellusta siihen vaiheeseen, missä olisin sen toivonut tässä vaiheessa olevan (johtuen pitkälti ylenpalttisesta ajankäytöstä tutkiessani ylimääräisten ja itselleni turhan haastavien ominaisuuksien toteuttamismahdollisuuksia), mutta tärkeimmät ja ajallisesti vaativimmat ominaisuudet pitäisi olla koodissa pitkälti toteutettuna (ei tosin välttämättä käytettävissä :D).
+
+Tällä hetkellä sovelluksessa on toteutettuna käyttäjätunnusten rekisteröinti sekä sisään- ja uloskirjautuminen, keskustelusovelluksen tavallinen hierarkinen rakenne (aihesivut>ketjut>viestit), aiheiden, ketjujen ja viestien luominen ja poistaminen. Koodista löytyy kaikki valmistelut käyttäjien oikeuksien rajoittamiseen, mutta en ehtinyt deadlineen mennessä käytännössä toteuttaa näistä kuin aiheiden luonnin rajoittamisen ylläpidolle.
+
+### Sovelluksen suunnitelma (ensimmäinen välipalautus 12.3)
+
 Tarkoituksenani on toteuttaa keskustelusovellus juuri sellaisena kuin on esitetty [kurssin aihe-ehdotuksissa](https://hy-tsoha.github.io/materiaali/aiheen_valinta/). Kyseessä on siis perinteinen keskustelupalstaratkaisu, jossa käyttäjä voi luoda aloitusviestillä keskustelun, joka vastauksineen muodostaa erillisen kokonaisuuden (muista keskusteluista). Keskustelut on lisäksi kategorisoitu joidenkin aihepiirien mukaisesti.
 Sovellus kattaa siis varmasti seuraavat toiminnot:
 - Käyttäjätunnuksen luominen / sisään- ja uloskirjautuminen
