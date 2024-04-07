@@ -10,7 +10,9 @@ def index():
         return render_template("index.html", topics=topics)
     if request.method == "POST":
         new_topic_name = request.form["new_topic_name"]
-        discussion.add_topic(new_topic_name, [0])
+        limited_access = request.form.get("limited_access", False)
+        if users.check_admin_role():
+            discussion.add_topic(new_topic_name, limited_access)
         return redirect(url_for("index"))
 
 @app.route("/login",methods=["GET", "POST"])
@@ -30,7 +32,11 @@ def login():
 def open_topic(topic_name):
     topic = discussion.get_topic_entry(topic_name=topic_name)
     threads = discussion.get_threads(topic.id)
-    #TODO: check user topic access rights
+    #check user topic access rights
+    if topic.limited_access:
+        if not users.check_admin_role():
+            if not users.check_access_rights(topic.id):
+                return "ei lupaa" #ERROR
     if request.method == "GET":
         return render_template("topic.html", threads=threads, topic=topic)
     if request.method == "POST":
@@ -44,8 +50,14 @@ def open_thread(thread_id, topic_name):
     topic = discussion.get_topic_entry(topic_name=topic_name)
     thread = discussion.get_thread_entry(thread_id)
     messages = discussion.get_messages(thread_id)
-    #TODO: ensure that id for topic matches thread's topic_id
-    #TODO: check user topic AND thread access rights
+    #ensure that id for topic matches thread's topic_id
+    if topic.id != thread.topic_id:
+        return "bad url" #ERROR
+    #check user topic access rights
+    if topic.limited_access:
+        if not users.check_admin_role():
+            if not users.check_access_rights(topic.id):
+                return "ei lupaa" #ERROR
     if request.method == "GET":
         return render_template("thread.html", messages=messages, thread=thread, topic=topic)
     if request.method == "POST":
@@ -55,6 +67,8 @@ def open_thread(thread_id, topic_name):
 
 @app.route("/delete/<int:topic_id>/<int:thread_id>/<int:message_id>")
 def delete(topic_id, thread_id, message_id):
+    if not users.check_admin_role():
+        return "ei lupaa" #ERROR
     #Get topic name for URL translation
     topic_name = discussion.get_topic_entry(topic_id=topic_id).name
     #Check which parameters are not 0 to determine which level (topic/thread/message) to delete

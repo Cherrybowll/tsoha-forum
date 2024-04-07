@@ -3,7 +3,7 @@ import users
 from sqlalchemy.sql import text
 
 def get_topics():
-    sql = text("SELECT id, name, access_group FROM topics WHERE visibility=TRUE ORDER BY name")
+    sql = text("SELECT id, name, limited_access FROM topics WHERE visibility=TRUE ORDER BY name")
     result = db.session.execute(sql)
     return result.fetchall()
 
@@ -21,15 +21,15 @@ def get_messages(thread_id):
 #Both options needed for the quirky URL system
 def get_topic_entry(topic_name="", topic_id=0):
     if topic_id != 0:
-        sql = text("SELECT id, name, access_group, visibility FROM topics WHERE id=:topic_id")
+        sql = text("SELECT id, name, limited_access, visibility FROM topics WHERE id=:topic_id")
         result = db.session.execute(sql, {"topic_id":topic_id})
     else:
-        sql = text("SELECT id, name, access_group, visibility FROM topics WHERE name=:topic_name")
+        sql = text("SELECT id, name, limited_access, visibility FROM topics WHERE name=:topic_name")
         result = db.session.execute(sql, {"topic_name":topic_name})
     return result.fetchone()
 
 def get_thread_entry(thread_id):
-    sql = text("SELECT id, subject, content, creator_id, created_at FROM threads WHERE id=:thread_id")
+    sql = text("SELECT id, subject, content, creator_id, topic_id, created_at FROM threads WHERE id=:thread_id")
     result = db.session.execute(sql, {"thread_id":thread_id})
     return result.fetchone()
 
@@ -45,9 +45,9 @@ def add_thread(subject, content, creator_id, topic_id):
     db.session.commit()
     return
 
-def add_topic(name, access_group):
-    sql = text("INSERT INTO topics (name, access_group) VALUES (:name, :access_group)")
-    db.session.execute(sql, {"name":name, "access_group":access_group})
+def add_topic(name, limited_access):
+    sql = text("INSERT INTO topics (name, limited_access) VALUES (:name, :limited_access)")
+    db.session.execute(sql, {"name":name, "limited_access":limited_access})
     db.session.commit()
     return
 

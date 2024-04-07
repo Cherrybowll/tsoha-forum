@@ -18,8 +18,12 @@ Olet kirjautuneena käyttäjänä {{ session.username }}
 <a href={{ url_for("delete", topic_id=topic.id, thread_id=0, message_id=0) }}>Poista aihe</a>
 <hr>
 {% endfor %}
+{% if session.admin_role %}
 <form action={{ url_for("index") }} method="POST">
 <input type="text" name="new_topic_name">
 <br>
+<input type="checkbox" name="limited_access" value="True"> Rajoitettu pääsy
+<br>
 <input type="submit" value="Lisää aihe">
 </form>
+{% endif %}
