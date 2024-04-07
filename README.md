@@ -26,6 +26,8 @@ Sovelluksen nykytilasta mainittakoon, että en ole saanut sovellusta siihen vaih
 
 Tällä hetkellä sovelluksessa on toteutettuna käyttäjätunnusten rekisteröinti sekä sisään- ja uloskirjautuminen, keskustelusovelluksen tavallinen hierarkinen rakenne (aihesivut>ketjut>viestit), aiheiden, ketjujen ja viestien luominen ja poistaminen. Koodista löytyy kaikki valmistelut käyttäjien oikeuksien rajoittamiseen, mutta en ehtinyt deadlineen mennessä käytännössä toteuttaa näistä kuin aiheiden luonnin rajoittamisen ylläpidolle.
 
+Tiedettyjä ongelmia tällä hetkellä ovat VARMASTI ainakin se, että kuka vain voi poistaa kenen tahansa viestejä/ketjuja, ulkoasu on hirvittävä, joiltain sivulta puuttuu takaisin-painikkeita, URL:n muuttaminen käsin voi aiheuttaa lukuisia ei-toivottuja seurauksia, jne., joten valitettavasti sovelluksen anti vertaisarvioijaille on tällä hetkellä melko häviävä.
+
 ### Sovelluksen suunnitelma (ensimmäinen välipalautus 12.3)
 
 Tarkoituksenani on toteuttaa keskustelusovellus juuri sellaisena kuin on esitetty [kurssin aihe-ehdotuksissa](https://hy-tsoha.github.io/materiaali/aiheen_valinta/). Kyseessä on siis perinteinen keskustelupalstaratkaisu, jossa käyttäjä voi luoda aloitusviestillä keskustelun, joka vastauksineen muodostaa erillisen kokonaisuuden (muista keskusteluista). Keskustelut on lisäksi kategorisoitu joidenkin aihepiirien mukaisesti.
