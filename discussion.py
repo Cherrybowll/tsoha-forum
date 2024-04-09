@@ -17,10 +17,10 @@ def get_messages(thread_id):
     result = db.session.execute(sql, {"thread_id":thread_id})
     return result.fetchall()
 
-#Get topic entry by name or id, searches with name if id is not specified
+#Get topic entry by name or id, searches by id if the parameter is not specified
 #Both options needed for the quirky URL system
-def get_topic_entry(topic_name="", topic_id=0):
-    if topic_id != 0:
+def get_topic_entry(topic_name="", topic_id=0, by_id=True):
+    if by_id:
         sql = text("SELECT id, name, limited_access, visibility FROM topics WHERE id=:topic_id")
         result = db.session.execute(sql, {"topic_id":topic_id})
     else:
@@ -31,6 +31,11 @@ def get_topic_entry(topic_name="", topic_id=0):
 def get_thread_entry(thread_id):
     sql = text("SELECT id, subject, content, creator_id, topic_id, created_at FROM threads WHERE id=:thread_id")
     result = db.session.execute(sql, {"thread_id":thread_id})
+    return result.fetchone()
+
+def get_message_entry(message_id):
+    sql = text("SELECT id, content, creator_id, thread_id, topic_id FROM messages WHERE id=:message_id")
+    result = db.session.execute(sql, {"message_id":message_id})
     return result.fetchone()
 
 def add_message(content, creator_id, thread_id, topic_id):
