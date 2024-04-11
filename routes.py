@@ -30,7 +30,7 @@ def login():
 
 @app.route("/forum/<string:topic_name>", methods=["GET", "POST"])
 def open_topic(topic_name):
-    topic = discussion.get_topic_entry(topic_name=topic_name)
+    topic = discussion.get_topic_entry(topic_name=topic_name, by_id=False)
     threads = discussion.get_threads(topic.id)
     #check user topic access rights
     if topic.limited_access:
@@ -47,7 +47,7 @@ def open_topic(topic_name):
 
 @app.route("/forum/<string:topic_name>/<int:thread_id>", methods=["GET", "POST"])
 def open_thread(thread_id, topic_name):
-    topic = discussion.get_topic_entry(topic_name=topic_name)
+    topic = discussion.get_topic_entry(topic_name=topic_name, by_id=False)
     thread = discussion.get_thread_entry(thread_id)
     messages = discussion.get_messages(thread_id)
     #ensure that id for topic matches thread's topic_id
@@ -61,25 +61,41 @@ def open_thread(thread_id, topic_name):
     if request.method == "GET":
         return render_template("thread.html", messages=messages, thread=thread, topic=topic)
     if request.method == "POST":
-        new_content = request.form["new_message"]
-        discussion.add_message(new_content, users.user_id(), thread.id, topic.id)
+        new_message_content = request.form["new_message"]
+        discussion.add_message(new_message_content, users.user_id(), thread.id, topic.id)
         return redirect(url_for("open_thread", thread_id=thread.id, topic_name=topic.name))
 
-@app.route("/delete/<int:topic_id>/<int:thread_id>/<int:message_id>")
-def delete(topic_id, thread_id, message_id):
+@app.route("/delete/topic/<int:topic_id>")
+def delete_topic(topic_id):
     if not users.check_admin_role():
         return "ei lupaa" #ERROR
-    #Get topic name for URL translation
-    topic_name = discussion.get_topic_entry(topic_id=topic_id).name
-    #Check which parameters are not 0 to determine which level (topic/thread/message) to delete
-    if message_id != 0:
-        discussion.delete_message(message_id)
-        return redirect(url_for("open_thread", thread_id=thread_id, topic_name=topic_name))
-    if thread_id != 0:
-        discussion.delete_thread(thread_id)
-        return redirect(url_for("open_topic", topic_name=topic_name))
-    discussion.hide_topic(topic_id)
-    return redirect(url_for("index"))
+    topic = discussion.get_topic_entry(topic_id=topic_id, by_id=True)
+    if topic:
+        discussion.hide_topic(topic_id)
+        return redirect(url_for("index"))
+    return "resurssia ei löydy" #ERROR
+
+@app.route("/delete/thread/<int:thread_id>")
+def delete_thread(thread_id):
+    thread = discussion.get_thread_entry(thread_id)
+    if thread:
+        topic_name = discussion.get_topic_entry(topic_id=thread.topic_id, by_id=True).name
+        if users.check_admin_role() or users.user_id() == thread.creator_id:
+            discussion.delete_thread(thread.id)
+            return redirect(url_for("open_topic", topic_name=topic_name))
+        return "ei lupaa" #ERROR
+    return "resurssia ei löydy" #ERROR
+
+@app.route("/delete/message/<int:message_id>")
+def delete_message(message_id):
+    message = discussion.get_message_entry(message_id)
+    if message:
+        topic_name = discussion.get_topic_entry(topic_id=message.topic_id, by_id=True).name
+        if users.check_admin_role() or users.user_id() == message.creator_id:
+            discussion.delete_message(message.id)
+            return redirect(url_for("open_thread", thread_id=message.thread_id, topic_name=topic_name))
+        return "ei lupaa" #ERROR
+    return "resurssia ei löydy" #ERROR
 
 @app.route("/register",methods=["GET", "POST"])
 def register():

@@ -15,7 +15,7 @@ Olet kirjautuneena käyttäjänä {{ session.username }}
 {{ topic.name }}
 <br>
 <a href={{ url_for("open_topic",topic_name=topic.name) }}>Siirry aiheeseen</a> 
-<a href={{ url_for("delete", topic_id=topic.id, thread_id=0, message_id=0) }}>Poista aihe</a>
+<a href={{ url_for("delete_topic", topic_id=topic.id) }}>Poista aihe</a>
 <hr>
 {% endfor %}
 {% if session.admin_role %}
