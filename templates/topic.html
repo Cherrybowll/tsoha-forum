@@ -5,6 +5,8 @@
 {% for thread in threads %}
 {{ thread.subject }}, julkaissut <b>{{ thread.creator_name }}</b> {{ thread.created_at }}
 <br>
+Viestejä: {{ thread.mcount }} - Viimeisin viesti {{ thread.mlatest }}
+<br>
 {{ thread.content }}
 <br>
 <a href={{ url_for("open_thread", topic_name=topic.name, thread_id=thread.id) }}>Siirry ketjuun</a> 

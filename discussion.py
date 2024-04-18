@@ -3,12 +3,12 @@ import users
 from sqlalchemy.sql import text
 
 def get_topics():
-    sql = text("SELECT id, name, limited_access FROM topics WHERE visibility=TRUE ORDER BY name")
+    sql = text("SELECT t.id, t.name, t.limited_access, COALESCE(h.count, 0) tcount, h.latest tlatest, COALESCE(m.count, 0) mcount, m.latest mlatest  FROM topics t LEFT JOIN (SELECT topic_id, COUNT(*) count, MAX(created_at) latest FROM threads GROUP BY topic_id) h ON t.id=h.topic_id LEFT JOIN (SELECT topic_id, COUNT(*) count, MAX(created_at) latest FROM messages GROUP BY topic_id) m ON t.id=m.topic_id WHERE t.visibility=TRUE ORDER BY t.name")
     result = db.session.execute(sql)
     return result.fetchall()
 
 def get_threads(topic_id):
-    sql = text("SELECT t.id, t.subject, t.content, t.created_at, u.name AS creator_name FROM threads t LEFT JOIN users u ON t.creator_id=u.id WHERE t.topic_id=:topic_id ORDER BY t.created_at")
+    sql = text("SELECT t.id, t.subject, t.content, t.created_at, u.name AS creator_name, COALESCE(m.count, 0) mcount, m.latest mlatest FROM threads t LEFT JOIN users u ON t.creator_id=u.id  LEFT JOIN (SELECT thread_id, COUNT(*) count, MAX(created_at) latest FROM messages GROUP BY thread_id) m ON m.thread_id=t.id WHERE t.topic_id=:topic_id ORDER BY t.created_at")
     result = db.session.execute(sql, {"topic_id":topic_id})
     return result.fetchall()
 
