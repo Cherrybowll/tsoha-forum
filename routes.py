@@ -97,6 +97,45 @@ def delete_message(message_id):
         return "ei lupaa" #ERROR
     return "resurssia ei löydy" #ERROR
 
+@app.route("/edit/thread/<int:thread_id>", methods=["GET", "POST"])
+def edit_thread(thread_id):
+    thread = discussion.get_thread_entry(thread_id)
+    if not thread:
+        return "resurssia ei löydy" #ERROR
+    if not (users.check_admin_role() or users.user_id() == thread.creator_id):
+        return "ei lupaa" #ERROR
+    #Get topic_name for the funny url system
+    topic_name = discussion.get_topic_entry(topic_id=thread.topic_id, by_id=True).name
+    
+    if request.method == "GET":
+        return render_template("edit_thread.html", thread=thread)
+    
+    if request.method == "POST":
+        edited_thread_subject = request.form["edited_thread_subject"]
+        edited_thread_content = request.form["edited_thread_content"]
+        #TODO: subject/content size limits
+        discussion.edit_thread(thread.id, edited_thread_subject, edited_thread_content)
+        return redirect(url_for("open_thread", thread_id=thread.id, topic_name=topic_name))
+
+@app.route("/edit/message/<int:message_id>", methods=["GET", "POST"])
+def edit_message(message_id):
+    message = discussion.get_message_entry(message_id)
+    if not message:
+        return "resurssia ei löydy" #ERROR
+    if not (users.check_admin_role() or users.user_id() == message.creator_id):
+        return "ei lupaa" #ERROR
+    #Get topic_name for the funny url system again
+    topic_name = discussion.get_topic_entry(topic_id=message.topic_id, by_id=True).name
+
+    if request.method == "GET":
+        return render_template("edit_message.html", message=message)
+    
+    if request.method == "POST":
+        edited_message_content = request.form["edited_message_content"]
+        #TODO: content size limits
+        discussion.edit_message(message.id, edited_message_content)
+        return redirect(url_for("open_thread", thread_id=message.thread_id, topic_name=topic_name))
+
 @app.route("/register",methods=["GET", "POST"])
 def register():
     if request.method == "GET":

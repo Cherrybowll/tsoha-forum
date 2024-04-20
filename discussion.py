@@ -73,3 +73,15 @@ def hide_topic(topic_id):
     db.session.execute(sql, {"topic_id":topic_id})
     db.session.commit()
     return
+
+def edit_thread(thread_id, new_subject, new_content):
+    sql = text("UPDATE threads SET subject=:new_subject, content=:new_content WHERE id=:thread_id")
+    db.session.execute(sql, {"new_subject":new_subject, "new_content":new_content, "thread_id":thread_id})
+    db.session.commit()
+    return
+
+def edit_message(message_id, new_content):
+    sql = text("UPDATE messages SET content=:new_content WHERE id=:message_id")
+    db.session.execute(sql, {"new_content":new_content, "message_id":message_id})
+    db.session.commit()
+    return
