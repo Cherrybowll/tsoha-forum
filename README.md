@@ -1,5 +1,46 @@
 # Keskustelusovellus
 
+### Nykytila ja tämänhetkiset käyttöohjeet (kolmas välipalautus 21.4)
+
+Sovelluksen saat käyttöösi seuraavasti:
+Ensiksi kloonaa tämän Github-repositorio omalle laitteellesi ja luo sen juurihakemistoon `.env`-niminen tiedosto, jonka tulee sisältää seuraavat rivit:
+```
+DATABASE_URL=<tietokannan-paikallinen-osoite>
+SECRET_KEY=<salainen-avain>
+```
+Seuraavaksi aktivoi virtuaaliympäristö (yhä repositorion juurihakemistossa) ja asenna riippuvuudet komennoilla:
+```
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r ./requirements.txt
+```
+Määritä tietokannan skeema ja luo ylläpitäjä-käyttäjä **admin** salasanalla **admin** komennolla:
+```
+psql < schema.sql
+```
+Nyt voit käynnistää sovelluksen komennolla:
+```
+flask run
+```
+
+**HUOMIO!** Ainakin toistaiseksi ainoa tapa toimia ylläpitäjänä on käyttää skeemassa valmiiksi määriteltyä ylläpitäjäkäyttäjää **admin** tai `psql`-tulkin kautta muuttaa jokin käyttäjä ylläpitäjäksi komennolla:
+```
+UPDATE users SET admin_role=TRUE WHERE name="[käyttäjänimi]";
+```
+
+Nykytilassaan sovellus ei vielä oikein yllä viikkopalautuksen tavoitteisiin eli siitä puuttuu useitakin oleellisia ominaisuuksia, joihin lukeutuu muun muassa seuraavat: mahdollisuus tehdä käyttäjistä ylläpitäjiä, käyttäjien profiilisivut, CSRF-hyökkäykseltä suojaaminen, kunnolliset ERROR-sivut ja viestien hakuominaisuus.
+
+Tällä hetkellä sovelluksessa on toteutettu ensinnäkin käyttäjän rekisteröinti sekä sisään- ja uloskirjautuminen ja varsinaisen keskutelun osalta rajattujen/julkisten aihealueiden luominen ja poistaminen (ylläpitäjät) ja ketjujen ja viestien luominen, muokkaaminen sekä poistaminen.
+
+Vertaiarvioijan työn mahdolliseksi helpottamiseksi mainitsen muutamia ongelmia, joiden olemassaolosta olen tietoinen ja siten niistä ei tarvitse välttämättä palautteessa mainita:
+- "ERROR-sivut" ovat vain palautettuja merkkijonoja ja siten varsin epäkäytännöllisiä
+- URL:ää muokkaamalla saa useilla sivuilla helposti virhetilanteen koodissa (tosin saa miellelään mainita jos onnistuu URL-muokkauksen avulla tekemeään jotain oletettavasti ei-toivottuja muutoksia)
+- "muokkaa viestiä"- ja "poista viesti"-painikkeet näkyvät kaikille käyttäjille kaikissa viesteissä, vaikkei niiden käyttö olisi mahdollista kyseiselle käyttäjälle
+- missään tekstikentässä ei ole syötteelle pituusrajoituksia (paitsi salasana ei voi olla tyhjä)
+- Aikaleimat ovat todella rumat millisekunteineen
+
+## Tästä eteen päin vanhaa ja epäoleellista dokumentaatiota
+
 ### Nykytila ja tämänhetkiset käyttöhjeet (toinen välipalautus 7.4)
 
 Sovelluksen saat käyttöösi seuraavasti:
