@@ -1,9 +1,9 @@
 Muokkaa ketjun otsikkoa ja sisältöä:
 <hr>
-<form action={{ url_for("edit_thread", thread_id=thread.id) }} method="post">
-Otsikko: <input type="text" name="edited_thread_subject" value={{ thread.subject }}>
+<form action="{{ url_for('edit_thread', thread_id=thread.id) }}" method="post">
+Otsikko: <input type="text" name="edited_thread_subject" value="{{ thread.subject }}">
 <br>
-Sisältö: <input type="text" name="edited_thread_content" value={{ thread.content }}>
+Sisältö: <input type="text" name="edited_thread_content" value="{{ thread.content }}">
 <br>
 <input type="submit" value="Tallenna muutokset">
 </form>

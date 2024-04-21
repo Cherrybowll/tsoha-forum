@@ -1,7 +1,7 @@
 Muokkaa viestin sisältöä:
 <hr>
-<form action={{ url_for("edit_message", message_id=message.id) }} method="post">
-<input type="text" name="edited_message_content" value={{ message.content }}>
+<form action="{{ url_for('edit_message', message_id=message.id) }}" method="post">
+<input type="text" name="edited_message_content" value="{{ message.content }}">
 <br>
 <input type="submit" value="Tallenna muutokset">
 </form>

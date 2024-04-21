@@ -1,9 +1,9 @@
 <title>{{ topic.name }} - {{ thread.subject }}</title>
 <h1>{{ topic.name }}</h1>
-<a href={{ url_for("index") }}>Palaa etusivulle</a>
+<a href="{{ url_for('index') }}">Palaa etusivulle</a>
 <br>
-<a href={{ url_for("open_topic", topic_name=topic.name)}}>Palaa aihe-sivulle {{ topic.name }}</a> 
-<a href={{ url_for("edit_thread", thread_id=thread.id) }}>Muokkaa lankaa</a>
+<a href="{{ url_for('open_topic', topic_name=topic.name) }}">Palaa aihe-sivulle {{ topic.name }}</a> 
+<a href="{{ url_for('edit_thread', thread_id=thread.id) }}">Muokkaa lankaa</a>
 <hr>
 <b>{{ thread.creator_id }}</b>: {{ thread.subject }}
 <br>
@@ -14,11 +14,11 @@
 <br>
 {{ message.content }}
 <br>
-<a href={{ url_for("edit_message", message_id=message.id) }}>Muokkaa viestiä</a> 
-<a href={{ url_for("delete_message", message_id=message.id) }}>Poista viesti</a>
+<a href="{{ url_for('edit_message', message_id=message.id) }}">Muokkaa viestiä</a> 
+<a href="{{ url_for('delete_message', message_id=message.id) }}">Poista viesti</a>
 <hr>
 {% endfor %}
-<form action={{ url_for("open_thread", thread_id=thread.id, topic_name=topic.name) }} method="post">
+<form action="{{ url_for('open_thread', thread_id=thread.id, topic_name=topic.name) }}" method="post">
 <input type="text" name="new_message">
 <br>
 <input type="submit" value="Lähetä viesti">
