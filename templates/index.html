@@ -12,7 +12,13 @@ Olet kirjautuneena käyttäjänä {{ session.username }}
 
 <hr>
 {% for topic in topics %}
-{{ topic.name }} - Ketjuja: {{ topic.tcount }} - Viestejä: {{ topic.mcount }} - Viimeisin lanka {{ topic.tlatest }} - Viimeisin viesti {{ topic.mlatest }}
+{{ topic.name }} - Ketjuja: {{ topic.tcount }} - Viestejä: {{ topic.mcount }}
+{% if topic.tlatest %}
+ - Viimeisin lanka {{ topic.tlatest }}
+{% if topic.mlatest %}
+ - Viimeisin viesti {{ topic.mlatest }}
+{% endif %}
+{% endif %}
 <br>
 <a href="{{ url_for('open_topic',topic_name=topic.name) }}">Siirry aiheeseen</a> 
 <a href="{{ url_for('delete_topic', topic_id=topic.id) }}">Poista aihe</a>

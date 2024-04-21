@@ -5,7 +5,10 @@
 {% for thread in threads %}
 {{ thread.subject }}, julkaissut <b>{{ thread.creator_name }}</b> {{ thread.created_at }}
 <br>
-Viestejä: {{ thread.mcount }} - Viimeisin viesti {{ thread.mlatest }}
+Viestejä: {{ thread.mcount }}
+{% if thread.mlatest %}
+ - Viimeisin viesti {{ thread.mlatest }}
+{% endif %}
 <br>
 {{ thread.content }}
 <br>
