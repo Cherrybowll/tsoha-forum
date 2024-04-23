@@ -15,19 +15,6 @@ def index():
             discussion.add_topic(new_topic_name, limited_access)
         return redirect(url_for("index"))
 
-@app.route("/login",methods=["GET", "POST"])
-def login():
-    if request.method == "GET":
-        return render_template("login.html")
-    
-    if request.method == "POST":
-        username = request.form["username"]
-        password = request.form["password"]
-        if users.login(username, password):
-            return redirect("/")
-        else:
-            return render_template("login.html", error_message="Käyttäjätunnusta tai salasanaa ei löydy", username=username)
-
 @app.route("/forum/<string:topic_name>", methods=["GET", "POST"])
 def open_topic(topic_name):
     topic = discussion.get_topic_entry(topic_name=topic_name, by_id=False)
@@ -135,6 +122,19 @@ def edit_message(message_id):
         #TODO: content size limits
         discussion.edit_message(message.id, edited_message_content)
         return redirect(url_for("open_thread", thread_id=message.thread_id, topic_name=topic_name))
+
+@app.route("/login",methods=["GET", "POST"])
+def login():
+    if request.method == "GET":
+        return render_template("login.html")
+    
+    if request.method == "POST":
+        username = request.form["username"]
+        password = request.form["password"]
+        if users.login(username, password):
+            return redirect("/")
+        else:
+            return render_template("login.html", error_message="Käyttäjätunnusta tai salasanaa ei löydy", username=username)
 
 @app.route("/register",methods=["GET", "POST"])
 def register():

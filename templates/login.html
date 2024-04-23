@@ -1,5 +1,5 @@
 <title>Kirjaudu sisään</title>
-<form action="/login" method="post">
+<form action="{{ url_for('login') }}" method="post">
 Käyttäjätunnus: <input type="text" name="username" value="{{ username }}">
 <br>
 Salasana: <input type="password" name="password">
