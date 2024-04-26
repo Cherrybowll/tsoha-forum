@@ -9,6 +9,57 @@ def user_id():
 def check_admin_role():
     return session.get("admin_role", 0)
 
+def get_user_entry(user_id):
+    sql = text("SELECT id, name, password, admin_role, created_at, banned, public, bio FROM users WHERE id=:user_id")
+    result = db.session.execute(sql, {"user_id":user_id})
+    return result.fetchone()
+
+def add_friend(user1_id, user2_id):
+    if check_friends(user1_id, user2_id):
+        return False
+    try:
+        sql = text("INSERT INTO friends (user1, user2) VALUES (:user1_id, :user2_id)")
+        db.session.execute(sql, {"user1_id":user1_id, "user2_id":user2_id})
+        db.session.commit()
+    except:
+        print("adding friend exception")
+        return False
+    return True
+
+def remove_friend(user1_id, user2_id):
+    sql = text("DELETE FROM friends WHERE user1=:user1_id AND user2=user2_id")
+    db.session.execute(sql, {"user1_id":user1_id, "user2_id":user2_id})
+    db.session.commit()
+    return
+
+def check_friends(user1_id, user2_id):
+    sql = text("SELECT user1, user2 FROM friends WHERE user1=:user1_id AND user2=:user2_id")
+    result = db.session.execute(sql, {"user1_id":user1_id, "user2_id":user2_id})
+    if result.fetchone():
+        return True
+    return False
+
+def add_block(user1_id, user2_id):
+    if check_blocked(user1_id, user2_id):
+        return False
+    sql = text("INSERT INTO blocks (user1, user2) VALUES (:user1_id, :user2_id)")
+    db.session.execute(sql, {"user1_id":user1_id, "user2_id":user2_id})
+    db.session.commit()
+    return True
+
+def remove_block(user1_id, user2_id):
+    sql = text("DELETE FROM blocks WHERE user1=:user1_id AND user2=:user2_id")
+    db.session.execute(sql, {"user1_id":user1_id, "user2_id":user2_id})
+    db.session.commit()
+    return
+
+def check_blocked(user1_id, user2_id):
+    sql = text("SELECT user1, user2 FROM blocks WHERE user1=:user1_id AND user2=:user2_id")
+    result = db.session.execute(sql, {"user1_id":user1_id, "user2_id":user2_id})
+    if result.fetchone():
+        return True
+    return False
+
 def get_access_rights():
     uid = user_id()
     if not uid:
@@ -40,7 +91,7 @@ def login(username, password):
 def register(username, password):
     password_hash = generate_password_hash(password)
     try:
-        sql = text("INSERT INTO users (name, password, created_at) VALUES (:name, :password, NOW());")
+        sql = text("INSERT INTO users (name, password, created_at) VALUES (:name, :password, NOW())")
         db.session.execute(sql, {"name":username, "password":password_hash})
         db.session.commit()
     except:

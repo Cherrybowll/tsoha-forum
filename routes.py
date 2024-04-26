@@ -123,6 +123,18 @@ def edit_message(message_id):
         discussion.edit_message(message.id, edited_message_content)
         return redirect(url_for("open_thread", thread_id=message.thread_id, topic_name=topic_name))
 
+@app.route("/user/<int:user_id>")
+def user_profile(user_id):
+    #The user who's profile is being viewed
+    user = users.get_user_entry(user_id)
+    if not user:
+        return "ei löydy" #ERROR
+    #The current clients user_id
+    c_user_id = users.user_id()
+    restricted_view = not (users.check_admin_role() or (user.public and not users.check_blocked(user.id, c_user_id)) or (not user.public and users.check_friends(user.id, c_user_id)))
+    print(restricted_view)
+    return render_template("user_profile.html", user=user, restricted_view=restricted_view)
+
 @app.route("/login",methods=["GET", "POST"])
 def login():
     if request.method == "GET":

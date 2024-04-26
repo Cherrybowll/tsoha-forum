@@ -4,7 +4,9 @@ CREATE TABLE users (
     password TEXT,
     admin_role BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP,
-    banned BOOLEAN DEFAULT FALSE
+    banned BOOLEAN DEFAULT FALSE,
+    public BOOLEAN DEFAULT FALSE,
+    bio TEXT DEFAULT 'Tervetuloa profiiliini!'
 );
 
 CREATE TABLE topics (
@@ -59,9 +61,11 @@ CREATE TABLE accesses (
 INSERT INTO users (
     name,
     password,
-    admin_role
+    admin_role,
+    created_at
 ) VALUES (
     'admin',
     'scrypt:32768:8:1$FJC1FTMn8BykRM3T$6e18c5b9ceb209e3647233c06088e423984b7c6544523d893134073fa9fcbe5ef582414f01bbcb0d2f035ef79ed0f67bed38fdb3a81c658e636f52c9d253af3b',
-    TRUE
+    TRUE,
+    NOW()
 );

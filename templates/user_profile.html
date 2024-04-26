@@ -1,0 +1,9 @@
+Käyttäjän <b>{{ user.name }}</b> profiili.
+<br>
+{% if session.user_id == user.id %}
+Oma käyttäjäsi
+<br>
+{% endif %}
+{% if not restricted_view or session.user_id == user.id %}
+Rajattua tietoa
+{% endif %}
