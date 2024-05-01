@@ -131,9 +131,24 @@ def user_profile(user_id):
         return "ei löydy" #ERROR
     #The current clients user_id
     c_user_id = users.user_id()
-    restricted_view = not (users.check_admin_role() or (user.public and not users.check_blocked(user.id, c_user_id)) or (not user.public and users.check_friends(user.id, c_user_id)))
-    print(restricted_view)
-    return render_template("user_profile.html", user=user, restricted_view=restricted_view)
+    friend_request_sent = users.check_friends(c_user_id, user.id)
+    friend_request_received = users.check_friends(user.id, c_user_id)
+    restricted_view = not (users.check_admin_role() or (user.public and not users.check_blocked(user.id, c_user_id)) or (not user.public and friend_request_received))
+    return render_template("user_profile.html", user=user, restricted_view=restricted_view, friend_request_sent=friend_request_sent, friend_request_received=friend_request_received)
+
+@app.route("/add_friend/<int:user_id>")
+def add_friend(user_id):
+    #Current clients user_id
+    c_user_id = users.user_id()
+    if not c_user_id or c_user_id == user_id:
+        return "ei onnistu" #ERROR
+    users.add_friend(c_user_id, user_id)
+    return redirect(url_for("user_profile", user_id=user_id))
+
+@app.route("/remove_friend/<int:user_id>")
+def remove_friend(user_id):
+    users.remove_friend(users.user_id(), user_id)
+    return redirect(url_for("user_profile", user_id=user_id))
 
 @app.route("/login",methods=["GET", "POST"])
 def login():

@@ -29,12 +29,12 @@ def get_topic_entry(topic_name="", topic_id=0, by_id=True):
     return result.fetchone()
 
 def get_thread_entry(thread_id):
-    sql = text("SELECT id, subject, content, creator_id, topic_id, created_at FROM threads WHERE id=:thread_id")
+    sql = text("SELECT t.id, t.subject, t.content, t.creator_id, t.topic_id, t.created_at, u.name creator_name, u.admin_role creator_admin FROM threads t LEFT JOIN users u ON t.creator_id=u.id WHERE t.id=:thread_id")
     result = db.session.execute(sql, {"thread_id":thread_id})
     return result.fetchone()
 
 def get_message_entry(message_id):
-    sql = text("SELECT id, content, creator_id, thread_id, topic_id FROM messages WHERE id=:message_id")
+    sql = text("SELECT m.id, m.content, m.creator_id, m.thread_id, m.topic_id, u.name creator_name, u.admin_role creator_admin FROM messages m LEFT JOIN users u ON m.creator_id=u.id WHERE m.id=:message_id")
     result = db.session.execute(sql, {"message_id":message_id})
     return result.fetchone()
 

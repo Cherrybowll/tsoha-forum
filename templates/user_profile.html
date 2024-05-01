@@ -2,8 +2,22 @@ Käyttäjän <b>{{ user.name }}</b> profiili.
 <br>
 {% if session.user_id == user.id %}
 Oma käyttäjäsi
-<br>
+{% elif not session.user_id %}
+Kirjaudu sisään lisätäksesi kavereita
+{% else %}
+{% if friend_request_sent %}
+{% if friend_request_received %}
+<a href="{{ url_for('remove_friend', user_id=user.id) }}">Poista kavereista</a>
+{% else %}
+Kaveripyyntö lähetetty
 {% endif %}
+{% elif friend_request_received %}
+<a href="{{ url_for('add_friend', user_id=user.id) }}">Hyväksy kaveripyyntö</a>
+{% else %}
+<a href="{{ url_for('add_friend', user_id=user.id) }}">Lähetä kaveripyyntö</a>
+{% endif %}
+{% endif %}
+<br>
 {% if not restricted_view or session.user_id == user.id %}
 Rajattua tietoa
 {% endif %}

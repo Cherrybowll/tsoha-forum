@@ -15,8 +15,11 @@ def get_user_entry(user_id):
     return result.fetchone()
 
 def add_friend(user1_id, user2_id):
+    #Check if user has already been added to friends to avoid duplicate entries
+    #Not necessarily needed
     if check_friends(user1_id, user2_id):
         return False
+    #Add to friends:
     try:
         sql = text("INSERT INTO friends (user1, user2) VALUES (:user1_id, :user2_id)")
         db.session.execute(sql, {"user1_id":user1_id, "user2_id":user2_id})
@@ -27,9 +30,13 @@ def add_friend(user1_id, user2_id):
     return True
 
 def remove_friend(user1_id, user2_id):
-    sql = text("DELETE FROM friends WHERE user1=:user1_id AND user2=user2_id")
-    db.session.execute(sql, {"user1_id":user1_id, "user2_id":user2_id})
-    db.session.commit()
+    try:
+        sql = text("DELETE FROM friends WHERE user1=:user1_id AND user2=:user2_id")
+        arvo = db.session.execute(sql, {"user1_id":user1_id, "user2_id":user2_id})
+        db.session.commit()
+    except:
+        print("removing friend exception")
+        return False
     return
 
 def check_friends(user1_id, user2_id):
