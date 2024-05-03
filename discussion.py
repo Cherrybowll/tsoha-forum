@@ -13,7 +13,7 @@ def get_threads(topic_id):
     return result.fetchall()
 
 def get_messages(thread_id):
-    sql = text("SELECT m.id, m.content, m.created_at, m.creator_id, u.name creator_name FROM messages m LEFT JOIN users u ON m.creator_id=u.id WHERE thread_id=:thread_id ORDER BY m.created_at")
+    sql = text("SELECT m.id, m.content, m.created_at, m.creator_id, u.name creator_name FROM messages m LEFT JOIN users u ON m.creator_id=u.id WHERE m.thread_id=:thread_id ORDER BY m.created_at")
     result = db.session.execute(sql, {"thread_id":thread_id})
     return result.fetchall()
 

@@ -15,11 +15,12 @@ def get_user_entry(user_id):
     return result.fetchone()
 
 def add_friend(user1_id, user2_id):
-    #Check if user has already been added to friends to avoid duplicate entries
+    #Check if user2 has already been added to friends to avoid duplicate entries
     #Not necessarily needed
-    if check_friends(user1_id, user2_id):
+    if check_friend(user1_id, user2_id):
         return False
-    #Add to friends:
+    
+    #Add user2 to friends:
     try:
         sql = text("INSERT INTO friends (user1, user2) VALUES (:user1_id, :user2_id)")
         db.session.execute(sql, {"user1_id":user1_id, "user2_id":user2_id})
@@ -37,9 +38,9 @@ def remove_friend(user1_id, user2_id):
     except:
         print("removing friend exception")
         return False
-    return
+    return True
 
-def check_friends(user1_id, user2_id):
+def check_friend(user1_id, user2_id):
     sql = text("SELECT user1, user2 FROM friends WHERE user1=:user1_id AND user2=:user2_id")
     result = db.session.execute(sql, {"user1_id":user1_id, "user2_id":user2_id})
     if result.fetchone():
@@ -47,20 +48,31 @@ def check_friends(user1_id, user2_id):
     return False
 
 def add_block(user1_id, user2_id):
-    if check_blocked(user1_id, user2_id):
+    #Check if user2 has already been blocked to avoid duplicate entries
+    if check_block(user1_id, user2_id):
         return False
-    sql = text("INSERT INTO blocks (user1, user2) VALUES (:user1_id, :user2_id)")
-    db.session.execute(sql, {"user1_id":user1_id, "user2_id":user2_id})
-    db.session.commit()
+    
+    #Add user2 to blocklist (of user1)
+    try:
+        sql = text("INSERT INTO blocks (user1, user2) VALUES (:user1_id, :user2_id)")
+        db.session.execute(sql, {"user1_id":user1_id, "user2_id":user2_id})
+        db.session.commit()
+    except:
+        print("block user exception")
+        return False
     return True
 
 def remove_block(user1_id, user2_id):
-    sql = text("DELETE FROM blocks WHERE user1=:user1_id AND user2=:user2_id")
-    db.session.execute(sql, {"user1_id":user1_id, "user2_id":user2_id})
-    db.session.commit()
-    return
+    try:
+        sql = text("DELETE FROM blocks WHERE user1=:user1_id AND user2=:user2_id")
+        db.session.execute(sql, {"user1_id":user1_id, "user2_id":user2_id})
+        db.session.commit()
+    except:
+        print("remove block exception")
+        return False
+    return True
 
-def check_blocked(user1_id, user2_id):
+def check_block(user1_id, user2_id):
     sql = text("SELECT user1, user2 FROM blocks WHERE user1=:user1_id AND user2=:user2_id")
     result = db.session.execute(sql, {"user1_id":user1_id, "user2_id":user2_id})
     if result.fetchone():
