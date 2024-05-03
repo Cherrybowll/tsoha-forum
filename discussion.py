@@ -85,3 +85,23 @@ def edit_message(message_id, new_content):
     db.session.execute(sql, {"new_content":new_content, "message_id":message_id})
     db.session.commit()
     return
+
+def search_messages(keyword, date_max, date_min):
+    keyword = "%" + keyword + "%"
+    sql = "SELECT * FROM messages WHERE content ILIKE :keyword ESCAPE '`'"
+    if date_max:
+        sql += " AND created_at > :date_max"
+    if date_min:
+        sql += " AND created_at < :date_min"
+    result = db.session.execute(text(sql), {"keyword":keyword, "date_max":date_max, "date_min":date_min})
+    return result.fetchall()
+
+def search_threads(keyword, date_max, date_min):
+    keyword = "%" + keyword + "%"
+    sql = "SELECT * FROM threads WHERE subject ILIKE :keyword ESCAPE '`' OR content ILIKE :keyword ESCAPE '`'"
+    if date_max:
+        sql += " AND created_at > :date_max"
+    if date_min:
+        sql += " AND created_at < :date_min"
+    result = db.session.execute(text(sql), {"keyword":keyword, "date_max":date_max, "date_min":date_min})
+    return result.fetchall()

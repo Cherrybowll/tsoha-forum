@@ -1,0 +1,13 @@
+<h1>Ketjut:</h1>
+{% for thread in threads %}
+{{ thread.subject }}
+<br>
+{{ thread.content }}
+{% endfor %}
+<hr>
+<h1>Viestit:</h1>
+<hr>
+{% for message in messages %}
+{{ message.content }}
+<hr>
+{% endfor %}

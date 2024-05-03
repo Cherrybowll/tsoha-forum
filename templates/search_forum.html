@@ -1,0 +1,8 @@
+<form action="{{ url_for('search_results') }}" method="get">
+    Hakusana: <input type="text" name="keyword">
+    <br>
+    <input type="datetime-local" name="date_max"> -
+    <input type="datetime-local" name="date_min">
+    <br>
+    <input type="submit" value="Hae">
+</form>

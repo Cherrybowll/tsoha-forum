@@ -2,6 +2,8 @@ from app import app
 from flask import redirect, render_template, request, url_for
 import users
 import discussion
+import utilities
+from datetime import datetime
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -122,6 +124,29 @@ def edit_message(message_id):
         #TODO: content size limits
         discussion.edit_message(message.id, edited_message_content)
         return redirect(url_for("open_thread", thread_id=message.thread_id, topic_name=topic_name))
+
+@app.route("/search")
+def search_forum():
+    return render_template("search_forum.html")
+
+@app.route("/search/results")
+def search_results():
+    keyword = request.args.get("keyword")
+    date_max = request.args.get("date_max")
+    date_min = request.args.get("date_min")
+    keyword = utilities.sql_like_escape(keyword)
+    try:
+        date_max = datetime.strptime(date_max, "%Y-%m-%dT%H:%M")
+    except:
+        date_max = 0
+    try:
+        date_min = datetime.strptime(date_min, "%Y-%m-%dT%H:%M")
+    except:
+        date_min = 0
+        
+    messages = discussion.search_messages(keyword, date_max, date_min)
+    threads = discussion.search_threads(keyword, date_max, date_min)
+    return render_template("search_results.html", messages=messages, threads=threads)
 
 @app.route("/user/<int:user_id>")
 def user_profile(user_id):
