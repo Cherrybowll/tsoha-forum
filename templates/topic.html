@@ -23,5 +23,6 @@ Otsikko: <input type="text" name="new_thread_name">
 <br>
 Viesti: <input type="text" name="new_thread_content">
 <br>
+<input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 <input type="submit" value="Lisää keskustelu">
 </form>

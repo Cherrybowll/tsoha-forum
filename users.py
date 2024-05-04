@@ -2,9 +2,13 @@ from db import db
 from flask import session
 from sqlalchemy.sql import text
 from werkzeug.security import generate_password_hash, check_password_hash
+import secrets
 
 def user_id():
     return session.get("user_id", 0)
+
+def csrf_token():
+    return session.get("csrf_token")
 
 def check_admin_role():
     return session.get("admin_role", 0)
@@ -121,6 +125,7 @@ def login(username, password):
         session["username"] = user.name
         session["admin_role"] = user.admin_role
         session["access_rights"] = get_access_rights(user_id())
+        session["csrf_token"] = secrets.token_hex(16)
         print(session.get("access_rights"))
         return True
     return False
@@ -140,3 +145,4 @@ def logout():
     del session["user_id"]
     del session["admin_role"]
     del session["access_rights"]
+    del session["csrf_token"]

@@ -23,5 +23,6 @@
 <form action="{{ url_for('open_thread', thread_id=thread.id, topic_name=topic.name) }}" method="post">
 <input type="text" name="new_message">
 <br>
+<input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 <input type="submit" value="Lähetä viesti">
 </form>

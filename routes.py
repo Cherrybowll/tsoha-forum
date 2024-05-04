@@ -1,5 +1,5 @@
 from app import app
-from flask import redirect, render_template, request, url_for
+from flask import redirect, render_template, request, url_for, abort
 import users
 import discussion
 import utilities
@@ -13,6 +13,8 @@ def index():
     if request.method == "POST":
         new_topic_name = request.form["new_topic_name"]
         limited_access = request.form.get("limited_access", False)
+        if users.csrf_token() != request.form["csrf_token"]:
+            abort(403)
         if users.check_admin_role():
             discussion.add_topic(new_topic_name, limited_access)
         return redirect(url_for("index"))
@@ -31,6 +33,8 @@ def open_topic(topic_name):
     if request.method == "POST":
         new_thread_name = request.form["new_thread_name"]
         new_thread_content = request.form["new_thread_content"]
+        if users.csrf_token() != request.form["csrf_token"]:
+            abort(403)
         discussion.add_thread(new_thread_name, new_thread_content, users.user_id(), topic.id)
         return redirect(url_for("open_topic", topic_name=topic.name))
 
@@ -51,6 +55,8 @@ def open_thread(thread_id, topic_name):
         return render_template("thread.html", messages=messages, thread=thread, topic=topic)
     if request.method == "POST":
         new_message_content = request.form["new_message"]
+        if users.csrf_token() != request.form["csrf_token"]:
+            abort(403)
         discussion.add_message(new_message_content, users.user_id(), thread.id, topic.id)
         return redirect(url_for("open_thread", thread_id=thread.id, topic_name=topic.name))
 
@@ -102,6 +108,8 @@ def edit_thread(thread_id):
     if request.method == "POST":
         edited_thread_subject = request.form["edited_thread_subject"]
         edited_thread_content = request.form["edited_thread_content"]
+        if users.csrf_token() != request.form["csrf_token"]:
+            abort(403)
         #TODO: subject/content size limits
         discussion.edit_thread(thread.id, edited_thread_subject, edited_thread_content)
         return redirect(url_for("open_thread", thread_id=thread.id, topic_name=topic_name))
@@ -121,6 +129,8 @@ def edit_message(message_id):
     
     if request.method == "POST":
         edited_message_content = request.form["edited_message_content"]
+        if users.csrf_token() != request.form["csrf_token"]:
+            abort(403)
         #TODO: content size limits
         discussion.edit_message(message.id, edited_message_content)
         return redirect(url_for("open_thread", thread_id=message.thread_id, topic_name=topic_name))
@@ -171,6 +181,8 @@ def user_profile(user_id):
 def update_access_rights(user_id):
     if not users.check_admin_role():
         return "ei lupaa" #ERROR
+    if users.csrf_token() != request.form["csrf_token"]:
+            abort(403)
     users.revoke_all_access_rights(user_id)
     accesses = []
     topics = discussion.get_topics_minimal()

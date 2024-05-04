@@ -3,5 +3,6 @@ Muokkaa viestin sisältöä:
 <form action="{{ url_for('edit_message', message_id=message.id) }}" method="post">
 <input type="text" name="edited_message_content" value="{{ message.content }}">
 <br>
+<input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 <input type="submit" value="Tallenna muutokset">
 </form>

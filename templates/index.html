@@ -30,6 +30,7 @@ Olet kirjautuneena käyttäjänä {{ session.username }}
 <br>
 <input type="checkbox" name="limited_access" value="True"> Rajoitettu pääsy
 <br>
+<input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 <input type="submit" value="Lisää aihe">
 </form>
 {% endif %}
