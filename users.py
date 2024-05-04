@@ -9,6 +9,12 @@ def user_id():
 def check_admin_role():
     return session.get("admin_role", 0)
 
+def alter_admin_role(user_id, is_admin):
+    sql = text("UPDATE users SET admin_role=:is_admin WHERE id=:user_id")
+    db.session.execute(sql, {"is_admin":is_admin, "user_id":user_id})
+    db.session.commit()
+    return
+
 def get_user_entry(user_id):
     sql = text("SELECT id, name, password, admin_role, created_at, banned, public, bio FROM users WHERE id=:user_id")
     result = db.session.execute(sql, {"user_id":user_id})
@@ -79,18 +85,30 @@ def check_block(user1_id, user2_id):
         return True
     return False
 
-def get_access_rights():
-    uid = user_id()
-    if not uid:
+def get_access_rights(user_id):
+    if not user_id:
         return []
-    sql = text("SELECT topic_id FROM accesses WHERE user_id=:uid")
-    result = db.session.execute(sql, {"uid":uid})
+    sql = text("SELECT topic_id FROM accesses WHERE user_id=:user_id")
+    result = db.session.execute(sql, {"user_id":user_id})
     return [i[0] for i in result.fetchall()]
 
 def check_access_rights(topic_id):
     if topic_id in session.get("access_rights"):
         return True
     return False
+
+def revoke_all_access_rights(user_id):
+    sql = text("DELETE FROM accesses WHERE user_id=:user_id")
+    db.session.execute(sql, {"user_id":user_id})
+    db.session.commit()
+    return
+
+def grant_access_rights(user_id, topic_id_list):
+    for topic_id in topic_id_list:
+        sql = text("INSERT INTO accesses (user_id, topic_id) VALUES (:user_id, :topic_id)")
+        db.session.execute(sql, {"user_id":user_id, "topic_id":topic_id})
+    db.session.commit()
+    return
 
 def login(username, password):
     sql = text("SELECT id, name, password, admin_role FROM users WHERE name=:username")
@@ -102,7 +120,7 @@ def login(username, password):
         session["user_id"] = user.id
         session["username"] = user.name
         session["admin_role"] = user.admin_role
-        session["access_rights"] = get_access_rights()
+        session["access_rights"] = get_access_rights(user_id())
         print(session.get("access_rights"))
         return True
     return False

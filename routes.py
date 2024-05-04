@@ -156,12 +156,43 @@ def user_profile(user_id):
         return "ei löydy" #ERROR
     #The current clients user_id
     c_user_id = users.user_id()
+    #Friend/block relations between the users
     friend_request_sent = users.check_friend(c_user_id, user.id)
     friend_request_received = users.check_friend(user.id, c_user_id)
     user_blocked = users.check_block(c_user_id, user.id)
     blocked_by_user = users.check_block(user.id, c_user_id)
+    #Get topics for altering access privileges (admin feature)
+    topics = discussion.get_topics_minimal()
+    access_rights = users.get_access_rights(user_id)
     restricted_view = not (users.check_admin_role() or (user.public and not users.check_block(user.id, c_user_id)) or (not user.public and friend_request_received))
-    return render_template("user_profile.html", user=user, restricted_view=restricted_view, friend_request_sent=friend_request_sent, friend_request_received=friend_request_received, user_blocked=user_blocked, blocked_by_user=blocked_by_user)
+    return render_template("user_profile.html", user=user, restricted_view=restricted_view, friend_request_sent=friend_request_sent, friend_request_received=friend_request_received, user_blocked=user_blocked, blocked_by_user=blocked_by_user, topics=topics, access_rights=access_rights)
+
+@app.route("/update_access_rights/<int:user_id>", methods=["POST"])
+def update_access_rights(user_id):
+    if not users.check_admin_role():
+        return "ei lupaa" #ERROR
+    users.revoke_all_access_rights(user_id)
+    accesses = []
+    topics = discussion.get_topics_minimal()
+    for topic in topics:
+        if request.form.get(str(topic.id), "False") == "True":
+            accesses.append(topic.id)
+    users.grant_access_rights(user_id, accesses)
+    return redirect(url_for('user_profile', user_id=user_id))
+
+@app.route("/grant_admin_role/<int:user_id>")
+def grant_admin_role(user_id):
+    if not users.check_admin_role():
+        return "ei lupaa" #ERROR
+    users.alter_admin_role(user_id, True)
+    return redirect(url_for("user_profile", user_id=user_id))
+
+@app.route("/revoke_admin_role/<int:user_id>")
+def revoke_admin_role(user_id):
+    if not users.check_admin_role():
+        return "ei lupaa" #ERROR
+    users.alter_admin_role(user_id, False)
+    return redirect(url_for("user_profile", user_id=user_id))
 
 @app.route("/add_friend/<int:user_id>")
 def add_friend(user_id):

@@ -1,13 +1,24 @@
-<h1>Ketjut:</h1>
+<h1>Hakutulokset</h1>
+
+<h2>Ketjut:</h2>
 {% for thread in threads %}
-{{ thread.subject }}
+<h3>{{ thread.subject }}</h3>
+<a href="{{ url_for('user_profile', user_id=thread.creator_id) }}">{{ thread.creator_name }}</a>,
+{{ thread.created_at.strftime("%d.%m.%Y, %H:%M") }}
 <br>
 {{ thread.content }}
+<br>
+<a href="{{ url_for('open_thread', thread_id=thread.id, topic_name=thread.topic_name) }}">Siirry keskusteluun</a>
+<hr>
 {% endfor %}
-<hr>
-<h1>Viestit:</h1>
-<hr>
+
+<h2>Viestit:</h2>
 {% for message in messages %}
+<a href="{{ url_for('user_profile', user_id=message.creator_id) }}">{{ message.creator_name }}</a>,
+{{ message.created_at.strftime("%d.%m.%Y, %H:%M") }}
+<br>
 {{ message.content }}
+<br>
+<a href="{{ url_for('open_thread', thread_id=message.thread_id, topic_name=message.topic_name, _anchor=message.id|string) }}">Siirry keskusteluun</a>
 <hr>
 {% endfor %}

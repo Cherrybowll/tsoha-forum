@@ -1,6 +1,25 @@
 Käyttäjän <b>{{ user.name }}</b> profiili.
 <br>
 
+{% if session.admin_role %}
+    {% if user.admin_role %}
+        <a href="{{ url_for('revoke_admin_role', user_id=user.id)}}">Poista ylläpito-oikeudet</a>
+    {% else %}
+        <a href="{{ url_for('grant_admin_role', user_id=user.id) }}">Anna ylläpito-oikeudet</a>
+    {% endif %}
+    <form action="{{ url_for('update_access_rights', user_id=user.id) }}" method="post">
+        {% for topic in topics %}
+            <label for="{{ topic.id }}">{{ topic.name }}</label>
+            {% if topic.id in access_rights %}
+                <input type="checkbox" id="{{ topic.id }}" name="{{ topic.id }}" value="True" checked>
+            {% else %}
+                <input type="checkbox" id="{{ topic.id }}" name="{{ topic.id }}" value="True">
+            {% endif %}
+        {% endfor %}
+        <input type="submit" value="Päivitä oikeudet">
+    </form>
+{% endif %}
+
 {% if not user_blocked %}
     {% if session.user_id == user.id %}
         Oma käyttäjäsi
