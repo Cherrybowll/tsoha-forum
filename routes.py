@@ -144,6 +144,25 @@ def edit_message(message_id):
                 return render_template("error.html", error_message="Viesti ei voi olla tyhjä")
         discussion.edit_message(message.id, edited_message_content)
         return redirect(url_for("open_thread", thread_id=message.thread_id, topic_name=topic_name))
+    
+@app.route("/edit/bio/<int:user_id>", methods=["GET", "POST"])
+def edit_bio(user_id):
+    user = users.get_user_entry(user_id)
+    if not user:
+        return render_template("error.html", error_message="Käyttäjää ei löydy")
+    if not (users.check_admin_role() or users.user_id() == user.id):
+        return render_template("error.html", error_message="Ei lupaa muokata käyttäjän tietoja")
+    
+    if request.method == "GET":
+        return render_template("edit_bio.html", user=user)
+    
+    if request.method == "POST":
+        new_bio = request.form["edited_bio"]
+        csrf_token = request.form["csrf_token"]
+        if csrf_token != users.csrf_token():
+            abort(403)
+        discussion.edit_bio(user.id, new_bio)
+        return redirect(url_for("user_profile", user_id=user.id))
 
 @app.route("/search")
 def search_forum():

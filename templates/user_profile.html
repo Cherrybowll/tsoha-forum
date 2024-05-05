@@ -54,7 +54,10 @@ Käyttäjän <b>{{ user.name }}</b> profiili.
 <br>
 
 {% if not restricted_view or session.user_id == user.id %}
-{{ user.bio }}
+<p>{{ user.bio }}</p>
+{% endif %}
+{%if session.admin_role or session.user_id == user.id %}
+<a href="{{ url_for('edit_bio', user_id=user.id) }}">Muokkaa kuvausta</a>
 {% endif %}
 
 {% endblock %}

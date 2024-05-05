@@ -117,3 +117,9 @@ def search_threads(keyword, date_max, date_min):
         sql += " AND h.created_at < :date_min"
     result = db.session.execute(text(sql), {"keyword":keyword, "date_max":date_max, "date_min":date_min})
     return result.fetchall()
+
+def edit_bio(user_id, bio):
+    sql = text("UPDATE users SET bio=:bio WHERE id=:user_id")
+    db.session.execute(sql, {"bio":bio, "user_id":user_id})
+    db.session.commit()
+    return
