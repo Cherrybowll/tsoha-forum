@@ -1,8 +1,13 @@
-Muokkaa viestin sisältöä:
-<hr>
+{% extends "layout.html" %}
+
+{% block title %}Muokkaa viestiä{% endblock %}
+{% block content %}
+
+<h2>Muokkaa viestin sisältöä</h2>
 <form action="{{ url_for('edit_message', message_id=message.id) }}" method="post">
-<input type="text" name="edited_message_content" value="{{ message.content }}">
-<br>
+<input type="text" id="edited_message_content" name="edited_message_content" value="{{ message.content }}">
 <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 <input type="submit" value="Tallenna muutokset">
 </form>
+
+{% endblock %}

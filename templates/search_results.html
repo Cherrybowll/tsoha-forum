@@ -1,24 +1,37 @@
-<h1>Hakutulokset</h1>
+{% extends "layout.html" %}
 
-<h2>Ketjut:</h2>
+{% block title %}Hakutulokset{% endblock %}
+{% block content %}
+
+<h2>Hakutulokset</h2>
+
+<h3>Ketjut:</h3>
 {% for thread in threads %}
-<h3>{{ thread.subject }}</h3>
+<h4>{{ thread.subject }}</h4>
 <a href="{{ url_for('user_profile', user_id=thread.creator_id) }}">{{ thread.creator_name }}</a>,
-{{ thread.created_at.strftime("%d.%m.%Y, %H:%M") }}
+{{ thread.created_at.strftime("%d.%m.%Y, %H:%M:%S") }}
 <br>
 {{ thread.content }}
 <br>
 <a href="{{ url_for('open_thread', thread_id=thread.id, topic_name=thread.topic_name) }}">Siirry keskusteluun</a>
 <hr>
 {% endfor %}
+{% if threads == [] %}
+Hakua vastaavia ketjuja ei löytynyt.
+{% endif %}
 
-<h2>Viestit:</h2>
+<h3>Viestit:</h3>
 {% for message in messages %}
 <a href="{{ url_for('user_profile', user_id=message.creator_id) }}">{{ message.creator_name }}</a>,
-{{ message.created_at.strftime("%d.%m.%Y, %H:%M") }}
+{{ message.created_at.strftime("%d.%m.%Y, %H:%M:%S") }}
 <br>
 {{ message.content }}
 <br>
 <a href="{{ url_for('open_thread', thread_id=message.thread_id, topic_name=message.topic_name, _anchor=message.id|string) }}">Siirry keskusteluun</a>
 <hr>
 {% endfor %}
+{% if messages == [] %}
+Hakua vastaavia viestejä ei löytynyt.
+{% endif %}
+
+{% endblock %}

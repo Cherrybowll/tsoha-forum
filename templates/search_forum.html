@@ -1,8 +1,17 @@
+{% extends "layout.html" %}
+
+{% block title %}Hae keskusteluista{% endblock %}
+{% block content %}
+
+<h2>Hae keskusteluista</h2>
 <form action="{{ url_for('search_results') }}" method="get">
-    Hakusana: <input type="text" name="keyword">
-    <br>
-    <input type="datetime-local" name="date_max"> -
-    <input type="datetime-local" name="date_min">
-    <br>
+    <label for="keyword">Hakusana</label>
+    <input type="text" id="keyword" name="keyword">
+    <label for="date_max">Ei ennen</label>
+    <input type="datetime-local" id="date_max" name="date_max">
+    <label for="date_max">Ei jälkeen</label>
+    <input type="datetime-local" id="date_min" name="date_min">
     <input type="submit" value="Hae">
 </form>
+
+{% endblock %}

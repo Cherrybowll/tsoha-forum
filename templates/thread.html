@@ -1,8 +1,12 @@
-<title>{{ topic.name }} - {{ thread.subject }}</title>
-<h1>{{ topic.name }}</h1>
+{% extends "layout.html" %}
+
+{% block title %}{{ topic.name }} &gt; {{ thread.subject }}{% endblock %}
+{% block content %}
+
+<h2>{{ topic.name }}</h2>
 <a href="{{ url_for('index') }}">Palaa etusivulle</a>
-<br>
-<a href="{{ url_for('open_topic', topic_name=topic.name) }}">Palaa aihe-sivulle {{ topic.name }}</a> 
+<a href="{{ url_for('open_topic', topic_name=topic.name) }}">Palaa aihe-sivulle {{ topic.name }}</a>
+<br> 
 <a href="{{ url_for('edit_thread', thread_id=thread.id) }}">Muokkaa lankaa</a>
 <hr>
 <a href="{{ url_for('user_profile', user_id=thread.creator_id) }}"><b>{{ thread.creator_name }}</b></a>: {{ thread.subject }}
@@ -21,8 +25,10 @@
 </div>
 {% endfor %}
 <form action="{{ url_for('open_thread', thread_id=thread.id, topic_name=topic.name) }}" method="post">
-<input type="text" name="new_message">
-<br>
+<label for="new_message">Uusi viesti</label>
+<input type="text" id="new_message" name="new_message">
 <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 <input type="submit" value="Lähetä viesti">
 </form>
+
+{% endblock %}

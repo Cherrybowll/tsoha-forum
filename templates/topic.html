@@ -1,5 +1,9 @@
-<title>Aiheet</title>
-<h1>{{ topic.name }}</h1>
+{% extends "layout.html" %}
+
+{% block title %}{{ topic.name }}{% endblock %}
+{% block content %}
+
+<h2>{{ topic.name }}</h2>
 <a href="{{ url_for('index') }}">Palaa etusivulle</a>
 <hr>
 {% for thread in threads %}
@@ -19,10 +23,12 @@ Viestejä: {{ thread.mcount }}
 <hr>
 {% endfor %}
 <form action="{{ url_for('open_topic', topic_name=topic.name) }}" method="post">
-Otsikko: <input type="text" name="new_thread_name">
-<br>
-Viesti: <input type="text" name="new_thread_content">
-<br>
+<label for="new_thread_name">Otsikko</label>
+<input type="text" id="new_thread_name" name="new_thread_name">
+<label for="new_thread_content">Viesti</label>
+<input type="text" id="new_thread_content" name="new_thread_content">
 <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 <input type="submit" value="Lisää keskustelu">
 </form>
+
+{% endblock %}

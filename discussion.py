@@ -95,18 +95,18 @@ def search_messages(keyword, date_max, date_min):
     keyword = "%" + keyword + "%"
     sql = "SELECT m.id, m.content, m.creator_id, m.thread_id, m.topic_id, m.created_at, t.name topic_name, u.name creator_name FROM messages m LEFT JOIN topics t ON m.topic_id=t.id LEFT JOIN users u ON m.creator_id=u.id WHERE m.content ILIKE :keyword ESCAPE '`'"
     if date_max:
-        sql += " AND created_at > :date_max"
+        sql += " AND m.created_at > :date_max"
     if date_min:
-        sql += " AND created_at < :date_min"
+        sql += " AND m.created_at < :date_min"
     result = db.session.execute(text(sql), {"keyword":keyword, "date_max":date_max, "date_min":date_min})
     return result.fetchall()
 
 def search_threads(keyword, date_max, date_min):
     keyword = "%" + keyword + "%"
-    sql = "SELECT h.id, h. subject, h.content, h.creator_id, h.topic_id, h.created_at, t.name topic_name, u.name creator_name FROM threads h LEFT JOIN topics t ON h.topic_id=t.id LEFT JOIN users u ON h.creator_id=u.id WHERE subject ILIKE :keyword ESCAPE '`' OR content ILIKE :keyword ESCAPE '`'"
+    sql = "SELECT h.id, h. subject, h.content, h.creator_id, h.topic_id, h.created_at, t.name topic_name, u.name creator_name FROM threads h LEFT JOIN topics t ON h.topic_id=t.id LEFT JOIN users u ON h.creator_id=u.id WHERE (subject ILIKE :keyword ESCAPE '`' OR content ILIKE :keyword ESCAPE '`')"
     if date_max:
-        sql += " AND created_at > :date_max"
+        sql += " AND h.created_at > :date_max"
     if date_min:
-        sql += " AND created_at < :date_min"
+        sql += " AND h.created_at < :date_min"
     result = db.session.execute(text(sql), {"keyword":keyword, "date_max":date_max, "date_min":date_min})
     return result.fetchall()

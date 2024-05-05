@@ -1,15 +1,22 @@
-<title>Rekisteröi käyttäjä</title>
+{% extends "layout.html" %}
+
+{% block title %}Rekisteröidy{% endblock %}
+{% block content %}
+
+<h2>Rekisteröi käyttäjä</h2>
 
 <form action="{{ url_for('register') }}" method="post">
-Käyttäjätunnus: <input type="text" name="username" value="{{ username }}">
-<br>
-Salasana: <input type="password" name="password1">
-<br>
-Salasana uudestaan: <input type="password" name="password2">
-<br>
+<label for="username">Käyttäjätunnus</label>
+<input type="text" id="username" name="username" value="{{ username }}">
+<label for="password1">Salasana</label>
+<input type="password" id="password1" name="password1">
+<label for="password2">Salasana uudestaan</label>
+<input type="password" id="password2" name="password2">
 <input type="submit" value="Rekisteröidy">
 </form>
 
 {% if error_message %}
 {{ error_message }}
 {% endif %}
+
+{% endblock %}

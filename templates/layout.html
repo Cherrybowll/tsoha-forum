@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<link rel="stylesheet" href="{{ url_for('static', filename='main.css')}}">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<body>
+    <div class="header">
+        <title>Keskustelusovellus: {% block title %}{% endblock %}</title>
+        <h1>Keskustelusovellus</h1>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('index') }}">Etusivu</a></li>
+                {% if session.user_id %}
+                <li><a href="{{ url_for('user_profile', user_id=session.user_id) }}">Oma profiilisi</a></li>
+                <li><a href="{{ url_for('logout') }}">Kirjaudu ulos</a></li>
+                {% else %}
+                <li><a href="{{ url_for('login') }}">Kirjaudu sisään</a></li>
+                <li><a href="{{ url_for('register') }}">Rekisteröidy</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% if session.user_id %}
+        Olet kirjautuneena käyttäjänä {{ session.username }}.
+        {% endif %}
+    </div>
+
+    <div class="content">{%block content %}{% endblock %}</div>
+</body>

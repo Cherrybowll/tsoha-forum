@@ -1,0 +1,28 @@
+body {
+    margin: auto;
+    max-width: 45em;
+    font-family: 'Helvetica', 'Arial', sans-serif;
+    background-color: aliceblue;
+}
+
+form {
+    display: grid;
+    max-width: 15em;
+    grid-template-columns: 5em 10 em;
+    grid-row-gap: .3em;
+}
+
+.header {
+    background-color: lightblue;
+    padding: 2em;
+}
+
+.content {
+    background-color: white;
+    padding: 2em;
+}
+
+.checkbox_on_line {
+    display: inline-block;
+    padding: 0 2em;
+}

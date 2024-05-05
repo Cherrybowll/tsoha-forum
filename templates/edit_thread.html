@@ -1,10 +1,16 @@
-Muokkaa ketjun otsikkoa ja sisältöä:
-<hr>
+{% extends "layout.html" %}
+
+{% block title %}Muokkaa lankaa{% endblock %}
+{% block content %}
+
+<h2>Muokkaa ketjun otsikkoa ja sisältöä</h2>
 <form action="{{ url_for('edit_thread', thread_id=thread.id) }}" method="post">
-Otsikko: <input type="text" name="edited_thread_subject" value="{{ thread.subject }}">
-<br>
-Sisältö: <input type="text" name="edited_thread_content" value="{{ thread.content }}">
-<br>
+<label for="edited_thread_subject">Otsikko</label>
+<input type="text" id="edited_thread_subject" name="edited_thread_subject" value="{{ thread.subject }}">
+<label for="edited_thread_content">Sisältö</label>
+<input type="text" id="edited_thread_content" name="edited_thread_content" value="{{ thread.content }}">
 <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 <input type="submit" value="Tallenna muutokset">
 </form>
+
+{% endblock %}

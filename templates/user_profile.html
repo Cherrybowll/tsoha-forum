@@ -1,3 +1,8 @@
+{% extends "layout.html" %}
+
+{% block title %}Käyttäjän {{ user.name }} profiili{% endblock %}
+{% block content %}
+
 Käyttäjän <b>{{ user.name }}</b> profiili.
 <br>
 
@@ -7,14 +12,16 @@ Käyttäjän <b>{{ user.name }}</b> profiili.
     {% else %}
         <a href="{{ url_for('grant_admin_role', user_id=user.id) }}">Anna ylläpito-oikeudet</a>
     {% endif %}
-    <form action="{{ url_for('update_access_rights', user_id=user.id) }}" method="post">
+    <form id="access_right_form" action="{{ url_for('update_access_rights', user_id=user.id) }}" method="post">
         {% for topic in topics %}
+        <div class="checkbox_on_line">
             <label for="{{ topic.id }}">{{ topic.name }}</label>
             {% if topic.id in access_rights %}
                 <input type="checkbox" id="{{ topic.id }}" name="{{ topic.id }}" value="True" checked>
             {% else %}
                 <input type="checkbox" id="{{ topic.id }}" name="{{ topic.id }}" value="True">
             {% endif %}
+        </div>
         {% endfor %}
         <input type="submit" value="Päivitä oikeudet">
     </form>
@@ -49,3 +56,5 @@ Käyttäjän <b>{{ user.name }}</b> profiili.
 {% if not restricted_view or session.user_id == user.id %}
 Rajattua tietoa
 {% endif %}
+
+{% endblock %}
