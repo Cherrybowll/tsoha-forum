@@ -23,7 +23,9 @@ Viestejä: {{ thread.mcount }}
 {% endif %}
 <br>
 <a href="{{ url_for('open_thread', topic_name=topic.name, thread_id=thread.id) }}">Siirry ketjuun</a> 
+{% if session.admin_role or session.user_id == thread.creator_id %}
 <a href="{{ url_for('delete_thread', thread_id=thread.id) }}">Poista ketju</a>
+{% endif %}
 <hr>
 {% endfor %}
 <form action="{{ url_for('open_topic', topic_name=topic.name) }}" method="post">
