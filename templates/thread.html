@@ -32,7 +32,7 @@
 <hr>
 </div>
 {% endfor %}
-<form action="{{ url_for('open_thread', thread_id=thread.id, topic_name=topic.name) }}" method="post">
+<form action="{{ url_for('open_thread', thread_id=thread.id, topic_name=topic.name, _anchor='end_of_page') }}" method="post" id="end_of_page">
 <label for="new_message">Uusi viesti</label>
 <input type="text" id="new_message" name="new_message">
 <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
