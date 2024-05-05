@@ -223,6 +223,9 @@ def update_access_rights(user_id):
 
 @app.route("/grant_admin_role/<int:user_id>")
 def grant_admin_role(user_id):
+    user = users.get_user_entry(user_id)
+    if not user:
+        return render_template("error.html", error_message="Käyttäjää ei löydy")
     if not users.check_admin_role():
         return render_template("error.html", error_message="Ei oikeutta käyttää toimintoa")
     users.alter_admin_role(user_id, True)
@@ -230,6 +233,9 @@ def grant_admin_role(user_id):
 
 @app.route("/revoke_admin_role/<int:user_id>")
 def revoke_admin_role(user_id):
+    user = users.get_user_entry(user_id)
+    if not user:
+        return render_template("error.html", error_message="Käyttäjää ei löydy")
     if not users.check_admin_role():
         return render_template("error.html", error_message="Ei oikeutta käyttää toimintoa")
     users.alter_admin_role(user_id, False)
