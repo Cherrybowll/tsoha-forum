@@ -1,5 +1,53 @@
 # Keskustelusovellus
 
+### Nykytila ja käyttöohjeet (lopullinen palautus 5.5)
+
+Sovelluksen saat käyttöösi seuraavasti:
+Ensiksi kloonaa tämän Github-repositorio omalle laitteellesi ja luo sen juurihakemistoon `.env`-niminen tiedosto, jonka tulee sisältää seuraavat rivit:
+```
+DATABASE_URL=<tietokannan-paikallinen-osoite>
+SECRET_KEY=<salainen-avain>
+```
+Seuraavaksi aktivoi virtuaaliympäristö (yhä repositorion juurihakemistossa) ja asenna riippuvuudet komennoilla:
+```
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r ./requirements.txt
+```
+Määritä tietokannan skeema ja luo ylläpitäjä-käyttäjä **admin** salasanalla **admin** komennolla:
+```
+psql < schema.sql
+```
+Nyt voit käynnistää sovelluksen komennolla:
+```
+flask run
+```
+
+**HUOMIO!** Alkaessasi käyttää sovellusta ylläpito-oikeudet ovat ainoastaan valmiiksi skeemassa luodulla käyttäjällä **admin**. Muista käyttäjistä voi tehdä ylläpitäjiä tämän käyttäjän avulla tai suoraan `psql`-tulkin kautta komennolla:
+```
+UPDATE users SET admin_role=TRUE WHERE name='[käyttäjänimi]';
+```
+
+Sovelluksessa on nyt toteutettuna (ja kaiken pitäisi toimia suhteellisen asiallisesti):
+- Käyttäjätunnusten rekisteröinti sekä sisään- ja uloskirjautuminen
+- Varsinainen keskustelualue hiearkisella aihe>lanka>viesti-rakenteella
+  - Aiheiden luonti ja piilottaminen (ylläpitäjille)
+  - Rajoitetut aiheet ja pääsyoikeuksien hallinta (ylläpitäjille)
+  - Ketjujen ja viestien julkaiseminen, poistaminen ja muokkaaminen (käyttäjille)
+- Ketjujen ja viestien hakuominaisuus
+  - Aikaväli rajattavissa
+  - Viestin valitseminen avaa ketjun oikeasta kohdasta, jotta viesti näkyy ruudulla
+- Käyttäjien profiilisivut
+  - Muokattava kuvaus
+  - Käyttäjän yksityisyys (=kuvauksen näkyvyys)
+- Käyttäjien estäminen (estää kaveriksi lisäämisen ja piilottaa viestien/lankojen sisällön näkymästä)
+- Käyttäjien lisääminen kavereiksi (kuvaus näkyy kavereille, mikäli yksityinen käyttäjä)
+- Käyttäjien bannaaminen (ketjut/viestit eivät enää näy keskustelualueella tai haussa)
+- Käyttäjien ylentäminen ylläpitäjiksi ja ylläpito-oikeuksien poistaminen
+- Hyvin karkea ulkoasu
+
+## Tästä eteen päin vanhaa ja epäoleellista dokumentaatiota (arkistointitarkoituksessa)
+
 ### Nykytila ja tämänhetkiset käyttöohjeet (kolmas välipalautus 21.4)
 
 Sovelluksen saat käyttöösi seuraavasti:
@@ -38,8 +86,6 @@ Vertaiarvioijan työn mahdolliseksi helpottamiseksi mainitsen muutamia ongelmia,
 - "muokkaa viestiä"- ja "poista viesti"-painikkeet näkyvät kaikille käyttäjille kaikissa viesteissä, vaikkei niiden käyttö olisi mahdollista kyseiselle käyttäjälle
 - missään tekstikentässä ei ole syötteelle pituusrajoituksia (paitsi salasana ei voi olla tyhjä)
 - Aikaleimat ovat todella rumat millisekunteineen
-
-## Tästä eteen päin vanhaa ja epäoleellista dokumentaatiota
 
 ### Nykytila ja tämänhetkiset käyttöhjeet (toinen välipalautus 7.4)
 
