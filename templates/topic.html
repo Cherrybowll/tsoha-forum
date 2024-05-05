@@ -23,8 +23,8 @@ Viestejä: {{ thread.mcount }}
 <hr>
 {% endfor %}
 <form action="{{ url_for('open_topic', topic_name=topic.name) }}" method="post">
-<label for="new_thread_name">Otsikko</label>
-<input type="text" id="new_thread_name" name="new_thread_name">
+<label for="new_thread_subject">Otsikko</label>
+<input type="text" id="new_thread_subject" name="new_thread_subject">
 <label for="new_thread_content">Viesti</label>
 <input type="text" id="new_thread_content" name="new_thread_content">
 <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">

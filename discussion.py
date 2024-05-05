@@ -44,18 +44,22 @@ def get_message_entry(message_id):
     return result.fetchone()
 
 def add_message(content, creator_id, thread_id, topic_id):
+    content = content[:500]
     sql = text("INSERT INTO messages (content, creator_id, thread_id, topic_id, created_at) VALUES (:content, :creator_id, :thread_id, :topic_id, NOW())")
     db.session.execute(sql, {"content":content, "creator_id":creator_id, "thread_id":thread_id, "topic_id":topic_id})
     db.session.commit()
     return
 
 def add_thread(subject, content, creator_id, topic_id):
+    subject = subject[:100]
+    content = content[:500]
     sql = text("INSERT INTO threads (subject, content, creator_id, topic_id, created_at) VALUES (:subject, :content, :creator_id, :topic_id, NOW())")
     db.session.execute(sql, {"subject":subject, "content":content, "creator_id":creator_id, "topic_id":topic_id})
     db.session.commit()
     return
 
 def add_topic(name, limited_access):
+    name = name[:100]
     sql = text("INSERT INTO topics (name, limited_access) VALUES (:name, :limited_access)")
     db.session.execute(sql, {"name":name, "limited_access":limited_access})
     db.session.commit()
@@ -80,12 +84,15 @@ def hide_topic(topic_id):
     return
 
 def edit_thread(thread_id, new_subject, new_content):
+    new_subject = new_subject[:100]
+    new_content = new_content[:500]
     sql = text("UPDATE threads SET subject=:new_subject, content=:new_content WHERE id=:thread_id")
     db.session.execute(sql, {"new_subject":new_subject, "new_content":new_content, "thread_id":thread_id})
     db.session.commit()
     return
 
 def edit_message(message_id, new_content):
+    new_content = new_content[:500]
     sql = text("UPDATE messages SET content=:new_content WHERE id=:message_id")
     db.session.execute(sql, {"new_content":new_content, "message_id":message_id})
     db.session.commit()

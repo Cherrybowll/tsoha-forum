@@ -11,13 +11,13 @@
 <hr>
 <a href="{{ url_for('user_profile', user_id=thread.creator_id) }}"><b>{{ thread.creator_name }}</b></a>: {{ thread.subject }}
 <br>
-{{ thread.content }}
+<p>{{ thread.content }}</p>
 <hr>
 {% for message in messages %}
 <div id="{{ message.id }}">
 <a href="{{ url_for('user_profile', user_id=message.creator_id) }}"><b>{{ message.creator_name }}</b></a> - {{ message.created_at }}
 <br>
-{{ message.content }}
+<p>{{ message.content }}</p>
 <br>
 <a href="{{ url_for('edit_message', message_id=message.id) }}">Muokkaa viestiä</a> 
 <a href="{{ url_for('delete_message', message_id=message.id) }}">Poista viesti</a>

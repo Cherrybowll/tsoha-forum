@@ -16,6 +16,8 @@ def index():
         if users.csrf_token() != request.form["csrf_token"]:
             abort(403)
         if users.check_admin_role():
+            if len(new_topic_name) == 0:
+                return render_template("error.html", error_message="Aiheen nimi ei voi olla tyhjä")
             discussion.add_topic(new_topic_name, limited_access)
         return redirect(url_for("index"))
 
@@ -31,11 +33,13 @@ def open_topic(topic_name):
     if request.method == "GET":
         return render_template("topic.html", threads=threads, topic=topic)
     if request.method == "POST":
-        new_thread_name = request.form["new_thread_name"]
+        new_thread_subject = request.form["new_thread_subject"]
         new_thread_content = request.form["new_thread_content"]
         if users.csrf_token() != request.form["csrf_token"]:
             abort(403)
-        discussion.add_thread(new_thread_name, new_thread_content, users.user_id(), topic.id)
+        if len(new_thread_subject) == 0:
+                return render_template("error.html", error_message="Ketjun nimi ei voi olla tyhjä")
+        discussion.add_thread(new_thread_subject, new_thread_content, users.user_id(), topic.id)
         return redirect(url_for("open_topic", topic_name=topic.name))
 
 @app.route("/forum/<string:topic_name>/<int:thread_id>", methods=["GET", "POST"])
@@ -57,6 +61,8 @@ def open_thread(thread_id, topic_name):
         new_message_content = request.form["new_message"]
         if users.csrf_token() != request.form["csrf_token"]:
             abort(403)
+        if len(new_message_content) == 0:
+                return render_template("error.html", error_message="Viesti ei voi olla tyhjä")
         discussion.add_message(new_message_content, users.user_id(), thread.id, topic.id)
         return redirect(url_for("open_thread", thread_id=thread.id, topic_name=topic.name))
 
@@ -110,7 +116,8 @@ def edit_thread(thread_id):
         edited_thread_content = request.form["edited_thread_content"]
         if users.csrf_token() != request.form["csrf_token"]:
             abort(403)
-        #TODO: subject/content size limits
+        if len(edited_thread_subject) == 0:
+                return render_template("error.html", error_message="Ketjun nimi ei voi olla tyhjä")
         discussion.edit_thread(thread.id, edited_thread_subject, edited_thread_content)
         return redirect(url_for("open_thread", thread_id=thread.id, topic_name=topic_name))
 
@@ -131,7 +138,8 @@ def edit_message(message_id):
         edited_message_content = request.form["edited_message_content"]
         if users.csrf_token() != request.form["csrf_token"]:
             abort(403)
-        #TODO: content size limits
+        if len(edited_message_content) == 0:
+                return render_template("error.html", error_message="Viesti ei voi olla tyhjä")
         discussion.edit_message(message.id, edited_message_content)
         return redirect(url_for("open_thread", thread_id=message.thread_id, topic_name=topic_name))
 
@@ -257,13 +265,16 @@ def register():
         username = request.form["username"]
         password1 = request.form["password1"]
         password2 = request.form["password2"]
-        #TODO: possible further username/password requirements
+
         if password1 != password2:
             return render_template("register.html", error_message="Salasanat eivät täsmää", username=username)
-        if password1 == "":
-            return render_template("register.html", error_message="Salasana ei voi olla tyhjä", username=username)
+        if len(password1) < 1 or len(password1) > 50:
+            return render_template("register.html", error_message="Salasanan pituus tulee olla välillä 1-50 merkkiä", username=username)
+        if len(username) < 1 or len(username) > 20:
+            return render_template("register.html", error_message="Käyttäjätunnuksen pituus tulee olla välillä 1-20 merkkiä")
+
         if users.register(username, password1):
-            return redirect("/")
+            return redirect(url_for("index"))
         else:
             return render_template("register.html", error_message="Rekisteröinti epäonnistui. Käyttäjätunnus saattaa olla jo käytössä.")
 

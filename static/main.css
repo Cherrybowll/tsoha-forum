@@ -20,6 +20,8 @@ form {
 .content {
     background-color: white;
     padding: 2em;
+    border-radius: .5em;
+    overflow-wrap: break-word;
 }
 
 .checkbox_on_line {
