@@ -235,6 +235,26 @@ def revoke_admin_role(user_id):
     users.alter_admin_role(user_id, False)
     return redirect(url_for("user_profile", user_id=user_id))
 
+@app.route("/ban/<int:user_id>")
+def ban_user(user_id):
+    user = users.get_user_entry(user_id)
+    if not user:
+        return render_template("error.html", error_message="Käyttäjää ei löydy")
+    if not (users.check_admin_role() or users.user_id() == user.id):
+        return render_template("error.html", error_message="Ei lupaa muokata käyttäjän tietoja")
+    users.ban_alter(user.id, True)
+    return redirect(url_for("user_profile", user_id=user.id))
+
+@app.route("/unban/<int:user_id>")
+def unban_user(user_id):
+    user = users.get_user_entry(user_id)
+    if not user:
+        return render_template("error.html", error_message="Käyttäjää ei löydy")
+    if not (users.check_admin_role() or users.user_id() == user.id):
+        return render_template("error.html", error_message="Ei lupaa muokata käyttäjän tietoja")
+    users.ban_alter(user.id, False)
+    return redirect(url_for("user_profile", user_id=user.id))
+
 @app.route("/add_friend/<int:user_id>")
 def add_friend(user_id):
     #Current clients user_id
@@ -266,7 +286,6 @@ def unblock_user(user_id):
 
 @app.route("/user_make_public/<int:user_id>")
 def user_make_public(user_id):
-
     user = users.get_user_entry(user_id)
     if not user:
         return render_template("error.html", error_message="Käyttäjää ei löydy")
@@ -278,7 +297,6 @@ def user_make_public(user_id):
 
 @app.route("/user_make_private/<int:user_id>")
 def user_make_private(user_id):
-    
     user = users.get_user_entry(user_id)
     if not user:
         return render_template("error.html", error_message="Käyttäjää ei löydy")

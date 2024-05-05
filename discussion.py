@@ -13,12 +13,12 @@ def get_topics_minimal():
     return result.fetchall()
 
 def get_threads(topic_id):
-    sql = text("SELECT t.id, t.subject, t.content, t.created_at, t.creator_id, u.name creator_name, COALESCE(m.count, 0) mcount, m.latest mlatest FROM threads t LEFT JOIN users u ON t.creator_id=u.id  LEFT JOIN (SELECT thread_id, COUNT(*) count, MAX(created_at) latest FROM messages GROUP BY thread_id) m ON m.thread_id=t.id WHERE t.topic_id=:topic_id ORDER BY t.created_at DESC")
+    sql = text("SELECT t.id, t.subject, t.content, t.created_at, t.creator_id, u.name creator_name, COALESCE(m.count, 0) mcount, m.latest mlatest FROM threads t LEFT JOIN users u ON t.creator_id=u.id  LEFT JOIN (SELECT thread_id, COUNT(*) count, MAX(created_at) latest FROM messages GROUP BY thread_id) m ON m.thread_id=t.id WHERE t.topic_id=:topic_id AND u.banned=FALSE ORDER BY t.created_at DESC")
     result = db.session.execute(sql, {"topic_id":topic_id})
     return result.fetchall()
 
 def get_messages(thread_id):
-    sql = text("SELECT m.id, m.content, m.created_at, m.creator_id, u.name creator_name FROM messages m LEFT JOIN users u ON m.creator_id=u.id WHERE m.thread_id=:thread_id ORDER BY m.created_at")
+    sql = text("SELECT m.id, m.content, m.created_at, m.creator_id, u.name creator_name FROM messages m LEFT JOIN users u ON m.creator_id=u.id WHERE m.thread_id=:thread_id AND u.banned=FALSE ORDER BY m.created_at")
     result = db.session.execute(sql, {"thread_id":thread_id})
     return result.fetchall()
 
@@ -100,7 +100,7 @@ def edit_message(message_id, new_content):
 
 def search_messages(keyword, date_max, date_min):
     keyword = "%" + keyword + "%"
-    sql = "SELECT m.id, m.content, m.creator_id, m.thread_id, m.topic_id, m.created_at, t.name topic_name, u.name creator_name FROM messages m LEFT JOIN topics t ON m.topic_id=t.id LEFT JOIN users u ON m.creator_id=u.id WHERE m.content ILIKE :keyword ESCAPE '`'"
+    sql = "SELECT m.id, m.content, m.creator_id, m.thread_id, m.topic_id, m.created_at, t.name topic_name, u.name creator_name FROM messages m LEFT JOIN topics t ON m.topic_id=t.id LEFT JOIN users u ON m.creator_id=u.id WHERE u.banned=FALSE AND m.content ILIKE :keyword ESCAPE '`'"
     if date_max:
         sql += " AND m.created_at > :date_max"
     if date_min:
@@ -110,7 +110,7 @@ def search_messages(keyword, date_max, date_min):
 
 def search_threads(keyword, date_max, date_min):
     keyword = "%" + keyword + "%"
-    sql = "SELECT h.id, h. subject, h.content, h.creator_id, h.topic_id, h.created_at, t.name topic_name, u.name creator_name FROM threads h LEFT JOIN topics t ON h.topic_id=t.id LEFT JOIN users u ON h.creator_id=u.id WHERE (subject ILIKE :keyword ESCAPE '`' OR content ILIKE :keyword ESCAPE '`')"
+    sql = "SELECT h.id, h. subject, h.content, h.creator_id, h.topic_id, h.created_at, t.name topic_name, u.name creator_name FROM threads h LEFT JOIN topics t ON h.topic_id=t.id LEFT JOIN users u ON h.creator_id=u.id WHERE u.banned=FALSE AND (subject ILIKE :keyword ESCAPE '`' OR content ILIKE :keyword ESCAPE '`')"
     if date_max:
         sql += " AND h.created_at > :date_max"
     if date_min:

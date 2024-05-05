@@ -3,8 +3,7 @@
 {% block title %}Käyttäjän {{ user.name }} profiili{% endblock %}
 {% block content %}
 
-Käyttäjän <b>{{ user.name }}</b> profiili.
-<br>
+<p>Käyttäjän <b>{{ user.name }}</b> profiili.</p>
 
 {% if session.admin_role %}
     {% if user.admin_role %}
@@ -12,6 +11,11 @@ Käyttäjän <b>{{ user.name }}</b> profiili.
     {% else %}
         <a href="{{ url_for('grant_admin_role', user_id=user.id) }}">Anna ylläpito-oikeudet</a>
     {% endif %}
+    {% if user.banned %}
+        <a href="{{ url_for('unban_user', user_id=user.id) }}">Poista julkaisukielto</a>
+    {% else %}
+        <a href="{{ url_for('ban_user', user_id=user.id) }}">Aseta julkaisukielto</a>
+        {% endif %}
     <form id="access_right_form" action="{{ url_for('update_access_rights', user_id=user.id) }}" method="post">
         {% for topic in topics %}
         <div class="checkbox_on_line">
@@ -25,6 +29,7 @@ Käyttäjän <b>{{ user.name }}</b> profiili.
         {% endfor %}
         <input type="submit" value="Päivitä oikeudet">
     </form>
+    <br>
 {% endif %}
 
 {% if not user_blocked %}

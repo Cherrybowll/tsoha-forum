@@ -151,6 +151,12 @@ def register(username, password):
         return False
     return login(username, password)
 
+def ban_alter(user_id, is_banned):
+    sql = text("UPDATE users SET banned=:is_banned WHERE id=:user_id")
+    db.session.execute(sql, {"user_id":user_id, "is_banned":is_banned})
+    db.session.commit()
+    return
+
 def logout():
     del session["username"]
     del session["user_id"]
