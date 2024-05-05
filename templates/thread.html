@@ -3,7 +3,7 @@
 {% block title %}{{ topic.name }} &gt; {{ thread.subject }}{% endblock %}
 {% block content %}
 
-<h2>{{ topic.name }}</h2>
+<h2>{{ thread.name }}</h2>
 <a href="{{ url_for('index') }}">Palaa etusivulle</a>
 <a href="{{ url_for('open_topic', topic_name=topic.name) }}">Palaa aihe-sivulle {{ topic.name }}</a>
 <br> 
@@ -11,13 +11,21 @@
 <hr>
 <a href="{{ url_for('user_profile', user_id=thread.creator_id) }}"><b>{{ thread.creator_name }}</b></a>: {{ thread.subject }}
 <br>
+{% if thread.creator_id in blocks %}
+<p><b>Käyttäjä on estetty. Poista esto nähdäksesi sisällön</b></p>
+{% else %}
 <p>{{ thread.content }}</p>
+{% endif %}
 <hr>
 {% for message in messages %}
 <div id="{{ message.id }}">
 <a href="{{ url_for('user_profile', user_id=message.creator_id) }}"><b>{{ message.creator_name }}</b></a> - {{ message.created_at }}
 <br>
+{% if message.creator_id in blocks %}
+<p><b>Käyttäjä on estetty. Poista esto nähdäksesi sisällön</b></p>
+{% else %}
 <p>{{ message.content }}</p>
+{% endif %}
 <br>
 <a href="{{ url_for('edit_message', message_id=message.id) }}">Muokkaa viestiä</a> 
 <a href="{{ url_for('delete_message', message_id=message.id) }}">Poista viesti</a>

@@ -16,7 +16,11 @@ Viestejä: {{ thread.mcount }}
  - Viimeisin viesti {{ thread.mlatest }}
 {% endif %}
 <br>
-{{ thread.content }}
+{% if thread.creator_id in blocks %}
+<p><b>Käyttäjä on estetty. Poista esto nähdäksesi sisällön</b></p>
+{% else %}
+<p>{{ thread.content }}</p>
+{% endif %}
 <br>
 <a href="{{ url_for('open_thread', topic_name=topic.name, thread_id=thread.id) }}">Siirry ketjuun</a> 
 <a href="{{ url_for('delete_thread', thread_id=thread.id) }}">Poista ketju</a>

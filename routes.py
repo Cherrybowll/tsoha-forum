@@ -30,8 +30,9 @@ def open_topic(topic_name):
         if not users.check_admin_role():
             if not users.check_access_rights(topic.id):
                 return render_template("error.html", error_message="Ei lupaa käyttää resurssia")
+    blocks = users.get_blocks(users.user_id())
     if request.method == "GET":
-        return render_template("topic.html", threads=threads, topic=topic)
+        return render_template("topic.html", threads=threads, topic=topic, blocks=blocks)
     if request.method == "POST":
         new_thread_subject = request.form["new_thread_subject"]
         new_thread_content = request.form["new_thread_content"]
@@ -55,8 +56,9 @@ def open_thread(thread_id, topic_name):
         if not users.check_admin_role():
             if not users.check_access_rights(topic.id):
                 return render_template("error.html", error_message="Ei lupaa käyttää resurssia")
+    blocks = users.get_blocks(users.user_id())
     if request.method == "GET":
-        return render_template("thread.html", messages=messages, thread=thread, topic=topic)
+        return render_template("thread.html", messages=messages, thread=thread, topic=topic, blocks=blocks)
     if request.method == "POST":
         new_message_content = request.form["new_message"]
         if users.csrf_token() != request.form["csrf_token"]:

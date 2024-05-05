@@ -89,6 +89,11 @@ def check_block(user1_id, user2_id):
         return True
     return False
 
+def get_blocks(user_id):
+    sql = text("SELECT user2 FROM blocks WHERE user1=:user_id")
+    result = db.session.execute(sql, {"user_id":user_id})
+    return [i[0] for i in result.fetchall()]
+
 def get_access_rights(user_id):
     if not user_id:
         return []
