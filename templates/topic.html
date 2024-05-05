@@ -28,13 +28,15 @@ Viestejä: {{ thread.mcount }}
 {% endif %}
 <hr>
 {% endfor %}
+{% if session.user_id %}
 <form action="{{ url_for('open_topic', topic_name=topic.name) }}" method="post">
 <label for="new_thread_subject">Otsikko</label>
 <input type="text" id="new_thread_subject" name="new_thread_subject">
 <label for="new_thread_content">Viesti</label>
 <input type="text" id="new_thread_content" name="new_thread_content">
 <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-<input type="submit" value="Lisää keskustelu">
+<input type="submit" value="Lisää lanka">
 </form>
+{% endif %}
 
 {% endblock %}
