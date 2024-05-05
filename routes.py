@@ -27,7 +27,7 @@ def open_topic(topic_name):
     if topic.limited_access:
         if not users.check_admin_role():
             if not users.check_access_rights(topic.id):
-                return "ei lupaa" #ERROR
+                return render_template("error.html", error_message="Ei lupaa käyttää resurssia")
     if request.method == "GET":
         return render_template("topic.html", threads=threads, topic=topic)
     if request.method == "POST":
@@ -45,12 +45,12 @@ def open_thread(thread_id, topic_name):
     messages = discussion.get_messages(thread_id)
     #ensure that id for topic matches thread's topic_id
     if topic.id != thread.topic_id:
-        return "bad url" #ERROR
+        return render_template("error.html", error_message="Resurssia ei löydy")
     #check user topic access rights
     if topic.limited_access:
         if not users.check_admin_role():
             if not users.check_access_rights(topic.id):
-                return "ei lupaa" #ERROR
+                return render_template("error.html", error_message="Ei lupaa käyttää resurssia")
     if request.method == "GET":
         return render_template("thread.html", messages=messages, thread=thread, topic=topic)
     if request.method == "POST":
@@ -63,12 +63,12 @@ def open_thread(thread_id, topic_name):
 @app.route("/delete/topic/<int:topic_id>")
 def delete_topic(topic_id):
     if not users.check_admin_role():
-        return "ei lupaa" #ERROR
+        return render_template("error.html", error_message="Ei lupaa käyttää resurssia")
     topic = discussion.get_topic_entry(topic_id=topic_id, by_id=True)
     if topic:
         discussion.hide_topic(topic_id)
         return redirect(url_for("index"))
-    return "resurssia ei löydy" #ERROR
+    return render_template("error.html", error_message="Resurssia ei löydy")
 
 @app.route("/delete/thread/<int:thread_id>")
 def delete_thread(thread_id):
@@ -78,8 +78,8 @@ def delete_thread(thread_id):
         if users.check_admin_role() or users.user_id() == thread.creator_id:
             discussion.delete_thread(thread.id)
             return redirect(url_for("open_topic", topic_name=topic_name))
-        return "ei lupaa" #ERROR
-    return "resurssia ei löydy" #ERROR
+        return render_template("error.html", error_message="Ei lupaa käyttää resurssia")
+    return render_template("error.html", error_message="Resurssia ei löydy")
 
 @app.route("/delete/message/<int:message_id>")
 def delete_message(message_id):
@@ -89,16 +89,16 @@ def delete_message(message_id):
         if users.check_admin_role() or users.user_id() == message.creator_id:
             discussion.delete_message(message.id)
             return redirect(url_for("open_thread", thread_id=message.thread_id, topic_name=topic_name))
-        return "ei lupaa" #ERROR
-    return "resurssia ei löydy" #ERROR
+        return render_template("error.html", error_message="Ei lupaa käyttää resurssia")
+    return render_template("error.html", error_message="Resurssia ei löydy")
 
 @app.route("/edit/thread/<int:thread_id>", methods=["GET", "POST"])
 def edit_thread(thread_id):
     thread = discussion.get_thread_entry(thread_id)
     if not thread:
-        return "resurssia ei löydy" #ERROR
+        return render_template("error.html", error_message="Resurssia ei löydy")
     if not (users.check_admin_role() or users.user_id() == thread.creator_id):
-        return "ei lupaa" #ERROR
+        return render_template("error.html", error_message="Ei lupaa käyttää resurssia")
     #Get topic_name for the funny url system
     topic_name = discussion.get_topic_entry(topic_id=thread.topic_id, by_id=True).name
     
@@ -118,9 +118,9 @@ def edit_thread(thread_id):
 def edit_message(message_id):
     message = discussion.get_message_entry(message_id)
     if not message:
-        return "resurssia ei löydy" #ERROR
+        return render_template("error.html", error_message="Resurssia ei löydy")
     if not (users.check_admin_role() or users.user_id() == message.creator_id):
-        return "ei lupaa" #ERROR
+        return render_template("error.html", error_message="Ei lupaa käyttää resurssia")
     #Get topic_name for the funny url system again
     topic_name = discussion.get_topic_entry(topic_id=message.topic_id, by_id=True).name
 
@@ -163,7 +163,7 @@ def user_profile(user_id):
     #The user who's profile is being viewed
     user = users.get_user_entry(user_id)
     if not user:
-        return "ei löydy" #ERROR
+        return render_template("error.html", error_message="Käyttäjää ei löydy")
     #The current clients user_id
     c_user_id = users.user_id()
     #Friend/block relations between the users
@@ -180,7 +180,7 @@ def user_profile(user_id):
 @app.route("/update_access_rights/<int:user_id>", methods=["POST"])
 def update_access_rights(user_id):
     if not users.check_admin_role():
-        return "ei lupaa" #ERROR
+        return render_template("error.html", error_message="Ei oikeutta käyttää toimintoa")
     if users.csrf_token() != request.form["csrf_token"]:
             abort(403)
     users.revoke_all_access_rights(user_id)
@@ -195,14 +195,14 @@ def update_access_rights(user_id):
 @app.route("/grant_admin_role/<int:user_id>")
 def grant_admin_role(user_id):
     if not users.check_admin_role():
-        return "ei lupaa" #ERROR
+        return render_template("error.html", error_message="Ei oikeutta käyttää toimintoa")
     users.alter_admin_role(user_id, True)
     return redirect(url_for("user_profile", user_id=user_id))
 
 @app.route("/revoke_admin_role/<int:user_id>")
 def revoke_admin_role(user_id):
     if not users.check_admin_role():
-        return "ei lupaa" #ERROR
+        return render_template("error.html", error_message="Ei oikeutta käyttää toimintoa")
     users.alter_admin_role(user_id, False)
     return redirect(url_for("user_profile", user_id=user_id))
 
@@ -211,7 +211,7 @@ def add_friend(user_id):
     #Current clients user_id
     c_user_id = users.user_id()
     if not c_user_id or c_user_id == user_id or users.check_block(user_id, c_user_id) or users.check_block(c_user_id, user_id):
-        return "ei onnistu" #ERROR
+        return render_template("error.html", error_message="Kaverin lisääminen ei onnistu")
     users.add_friend(c_user_id, user_id)
     return redirect(url_for("user_profile", user_id=user_id))
 
@@ -225,7 +225,7 @@ def block_user(user_id):
     #Current clients user_id
     c_user_id = users.user_id()
     if not c_user_id or c_user_id == user_id:
-        return "ei onnistu" #ERROR
+        return render_template("error.html", error_message="Käyttäjän estäminen ei onnistu")
     users.remove_friend(c_user_id, user_id)
     users.add_block(c_user_id, user_id)
     return redirect(url_for("user_profile", user_id=user_id))

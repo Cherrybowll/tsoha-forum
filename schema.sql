@@ -46,12 +46,6 @@ CREATE TABLE blocks (
     user2 INT REFERENCES users
 );
 
-CREATE TABLE media (
-    id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-    name TEXT,
-    data BYTEA
-);
-
 CREATE TABLE accesses (
     id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     user_id INT REFERENCES users,

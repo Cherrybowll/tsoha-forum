@@ -13,7 +13,7 @@ def get_topics_minimal():
     return result.fetchall()
 
 def get_threads(topic_id):
-    sql = text("SELECT t.id, t.subject, t.content, t.created_at, t.creator_id, u.name creator_name, COALESCE(m.count, 0) mcount, m.latest mlatest FROM threads t LEFT JOIN users u ON t.creator_id=u.id  LEFT JOIN (SELECT thread_id, COUNT(*) count, MAX(created_at) latest FROM messages GROUP BY thread_id) m ON m.thread_id=t.id WHERE t.topic_id=:topic_id ORDER BY t.created_at")
+    sql = text("SELECT t.id, t.subject, t.content, t.created_at, t.creator_id, u.name creator_name, COALESCE(m.count, 0) mcount, m.latest mlatest FROM threads t LEFT JOIN users u ON t.creator_id=u.id  LEFT JOIN (SELECT thread_id, COUNT(*) count, MAX(created_at) latest FROM messages GROUP BY thread_id) m ON m.thread_id=t.id WHERE t.topic_id=:topic_id ORDER BY t.created_at DESC")
     result = db.session.execute(sql, {"topic_id":topic_id})
     return result.fetchall()
 
