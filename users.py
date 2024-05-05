@@ -94,6 +94,12 @@ def get_blocks(user_id):
     result = db.session.execute(sql, {"user_id":user_id})
     return [i[0] for i in result.fetchall()]
 
+def alter_user_publicity(user_id, is_public):
+    sql = text("UPDATE users SET public=:is_public WHERE id=:user_id")
+    db.session.execute(sql, {"user_id":user_id, "is_public":is_public})
+    db.session.commit()
+    return
+
 def get_access_rights(user_id):
     if not user_id:
         return []

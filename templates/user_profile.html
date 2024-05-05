@@ -30,6 +30,12 @@ Käyttäjän <b>{{ user.name }}</b> profiili.
 {% if not user_blocked %}
     {% if session.user_id == user.id %}
         Oma käyttäjäsi
+        <br>
+        {% if user.public %}
+            <a href="{{ url_for('user_make_private', user_id=user.id) }}">Tee käyttäjästä yksityinen</a>
+        {% else %}
+            <a href="{{ url_for('user_make_public', user_id=user.id) }}">Tee käyttäjästä julkinen</a>
+        {% endif %}
     {% elif not session.user_id %}
         Kirjaudu sisään lisätäksesi kavereita
     {% else %}
@@ -55,6 +61,8 @@ Käyttäjän <b>{{ user.name }}</b> profiili.
 
 {% if not restricted_view or session.user_id == user.id %}
 <p>{{ user.bio }}</p>
+{% else %}
+<p>Käyttäjätili on yksityinen</p>
 {% endif %}
 {%if session.admin_role or session.user_id == user.id %}
 <a href="{{ url_for('edit_bio', user_id=user.id) }}">Muokkaa kuvausta</a>

@@ -264,6 +264,30 @@ def unblock_user(user_id):
     users.remove_block(users.user_id(), user_id)
     return redirect(url_for("user_profile", user_id=user_id))
 
+@app.route("/user_make_public/<int:user_id>")
+def user_make_public(user_id):
+
+    user = users.get_user_entry(user_id)
+    if not user:
+        return render_template("error.html", error_message="Käyttäjää ei löydy")
+    if users.user_id() != user.id:
+        return render_template("error.html", error_message="Ei lupaa muokata käyttäjän yksityisyyttä")
+    
+    users.alter_user_publicity(user.id, True)
+    return redirect(url_for("user_profile", user_id=user.id))
+
+@app.route("/user_make_private/<int:user_id>")
+def user_make_private(user_id):
+    
+    user = users.get_user_entry(user_id)
+    if not user:
+        return render_template("error.html", error_message="Käyttäjää ei löydy")
+    if users.user_id() != user.id:
+        return render_template("error.html", error_message="Ei lupaa muokata käyttäjän yksityisyyttä")
+    
+    users.alter_user_publicity(user.id, False)
+    return redirect(url_for("user_profile", user_id=user.id))
+
 @app.route("/login",methods=["GET", "POST"])
 def login():
     if request.method == "GET":
