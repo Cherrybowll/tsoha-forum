@@ -4,6 +4,11 @@
 {% block content %}
 
 <h2>Hae keskusteluista</h2>
+<p>
+    Hae ketjuja ja viestejä, jotka täsmäävät täysin hakusanaan.<br>
+    Jättämällä hakusanan tyhjäksi hakee kaiken sisällön aikarajojen puitteissa.<br>
+    Jättämällä aikarajat tyhjäksi ei käytä kyseistä rajoitusta.
+</p>
 <form action="{{ url_for('search_results') }}" method="get">
     <label for="keyword">Hakusana</label>
     <input type="text" id="keyword" name="keyword">
@@ -11,7 +16,7 @@
     <input type="datetime-local" id="date_max" name="date_max">
     <label for="date_max">Ei jälkeen</label>
     <input type="datetime-local" id="date_min" name="date_min">
-    <input type="submit" value="Hae">
+    <input class="button" type="submit" value="Hae">
 </form>
 
 {% endblock %}

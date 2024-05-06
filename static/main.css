@@ -7,9 +7,10 @@ body {
 
 form {
     display: grid;
-    max-width: 15em;
-    grid-template-columns: 5em 10 em;
-    grid-row-gap: .3em;
+    max-width: 18em;
+    grid-template-columns: 8em 10em;
+    grid-row-gap: 0.5em;
+    margin-top: 1em;
 }
 
 .header {
@@ -26,4 +27,36 @@ form {
 
 .checkbox_on_line {
     display: inline-block;
+}
+
+a {
+    color: cornflowerblue;
+}
+
+.button {
+    color: cornflowerblue;
+    border: 2px solid cornflowerblue;
+    padding: 10px 20px;
+    text-decoration: none;
+    display: inline-block;
+    background-color: white;
+}
+
+.button:hover {
+    color: white;
+    background-color: cornflowerblue;
+}
+
+.button:active {
+    background-color: rgb(88, 130, 209);
+}
+
+#limited_access {
+    text-align: center;
+    border: 100px solid black;
+}
+
+#access_right_form {
+    max-width: 26em;
+    grid-template-columns: 23em 3em;
 }

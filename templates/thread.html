@@ -3,15 +3,14 @@
 {% block title %}{{ topic.name }} &gt; {{ thread.subject }}{% endblock %}
 {% block content %}
 
-<h2>{{ thread.name }}</h2>
-<a href="{{ url_for('index') }}">Palaa etusivulle</a>
-<a href="{{ url_for('open_topic', topic_name=topic.name) }}">Palaa aihe-sivulle {{ topic.name }}</a>
+<h2>{{ topic.name }}</h2>
+<a class="button" href="{{ url_for('open_topic', topic_name=topic.name) }}">Palaa aihe-sivulle {{ topic.name }}</a>
 {% if session.admin_role or session.user_id == thread.creator_id %}
-<br> 
-<a href="{{ url_for('edit_thread', thread_id=thread.id) }}">Muokkaa lankaa</a>
+<a class="button" href="{{ url_for('edit_thread', thread_id=thread.id) }}">Muokkaa lankaa</a>
 {% endif %}
-<hr>
-<a href="{{ url_for('user_profile', user_id=thread.creator_id) }}"><b>{{ thread.creator_name }}</b></a>: {{ thread.subject }}
+<h3>{{ thread.subject }}</h3>
+<a href="{{ url_for('user_profile', user_id=thread.creator_id) }}"><b>{{ thread.creator_name }}</b></a>
+| {{ thread.created_at.strftime("%d.%m.%Y, %H:%M:%S")}}
 <br>
 {% if thread.creator_id in blocks %}
 <p><b>Käyttäjä on estetty. Poista esto nähdäksesi sisällön</b></p>
@@ -21,7 +20,7 @@
 <hr>
 {% for message in messages %}
 <div id="{{ message.id }}">
-<a href="{{ url_for('user_profile', user_id=message.creator_id) }}"><b>{{ message.creator_name }}</b></a> - {{ message.created_at }}
+<a href="{{ url_for('user_profile', user_id=message.creator_id) }}"><b>{{ message.creator_name }}</b></a> | {{ message.created_at.strftime("%d.%m.%Y, %H:%M:%S") }}
 <br>
 {% if message.creator_id in blocks %}
 <p><b>Käyttäjä on estetty. Poista esto nähdäksesi sisällön</b></p>
@@ -30,18 +29,19 @@
 {% endif %}
 {% if session.admin_role or session.user_id == message.creator_id %}
 <br>
-<a href="{{ url_for('edit_message', message_id=message.id) }}">Muokkaa viestiä</a> 
-<a href="{{ url_for('delete_message', message_id=message.id) }}">Poista viesti</a>
+<a class="button" href="{{ url_for('edit_message', message_id=message.id) }}">Muokkaa viestiä</a> 
+<a class="button" href="{{ url_for('delete_message', message_id=message.id) }}">Poista viesti</a>
 {% endif %}
 <hr>
 </div>
 {% endfor %}
 {% if session.user_id %}
+<h3>Uusi viesti</h3>
 <form action="{{ url_for('open_thread', thread_id=thread.id, topic_name=topic.name, _anchor='end_of_page') }}" method="post" id="end_of_page">
 <label for="new_message">Uusi viesti</label>
-<input type="text" id="new_message" name="new_message">
+<input type="text" id="new_message" name="new_message" maxlength="500">
 <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-<input type="submit" value="Lähetä viesti">
+<input class="button" type="submit" value="Lähetä viesti">
 </form>
 {% endif %}
 

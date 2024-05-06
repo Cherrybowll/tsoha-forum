@@ -4,16 +4,16 @@
 {% block content %}
 
 <h2>{{ topic.name }}</h2>
-<a href="{{ url_for('index') }}">Palaa etusivulle</a>
+<a class="button" href="{{ url_for('index') }}">Palaa etusivulle</a>
 <hr>
 {% for thread in threads %}
-{{ thread.subject }}, julkaissut 
-<a href="{{ url_for('user_profile', user_id=thread.creator_id) }}"><b>{{ thread.creator_name }}</b></a> -
-{{ thread.created_at }}
+<h3>{{ thread.subject }}</h3>
+<a href="{{ url_for('user_profile', user_id=thread.creator_id) }}"><b>{{ thread.creator_name }}</b></a>
+| {{ thread.created_at.strftime("%d.%m.%Y, %H:%M:%S") }}
 <br>
 Viestejä: {{ thread.mcount }}
 {% if thread.mlatest %}
- - Viimeisin viesti {{ thread.mlatest }}
+| viimeisin viesti {{ thread.mlatest.strftime("%d.%m.%Y, %H:%M:%S") }}
 {% endif %}
 <br>
 {% if thread.creator_id in blocks %}
@@ -21,21 +21,21 @@ Viestejä: {{ thread.mcount }}
 {% else %}
 <p>{{ thread.content }}</p>
 {% endif %}
-<br>
-<a href="{{ url_for('open_thread', topic_name=topic.name, thread_id=thread.id) }}">Siirry ketjuun</a> 
+<a class="button" href="{{ url_for('open_thread', topic_name=topic.name, thread_id=thread.id) }}">Siirry ketjuun</a> 
 {% if session.admin_role or session.user_id == thread.creator_id %}
-<a href="{{ url_for('delete_thread', thread_id=thread.id) }}">Poista ketju</a>
+<a class="button" href="{{ url_for('delete_thread', thread_id=thread.id) }}">Poista ketju</a>
 {% endif %}
 <hr>
 {% endfor %}
 {% if session.user_id %}
+<h3>Uusi ketju</h3>
 <form action="{{ url_for('open_topic', topic_name=topic.name) }}" method="post">
 <label for="new_thread_subject">Otsikko</label>
-<input type="text" id="new_thread_subject" name="new_thread_subject">
+<input type="text" id="new_thread_subject" name="new_thread_subject" maxlength="100">
 <label for="new_thread_content">Viesti</label>
-<input type="text" id="new_thread_content" name="new_thread_content">
+<input type="text" id="new_thread_content" name="new_thread_content" maxlength="500">
 <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-<input type="submit" value="Lisää lanka">
+<input class="button" type="submit" value="Lisää ketju">
 </form>
 {% endif %}
 

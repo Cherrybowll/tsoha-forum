@@ -9,7 +9,7 @@ Tervetuloa etusivulle!
 Valitse aihe-alue alta tai siirry
 <a href="{{ url_for('search_forum') }}">hakuun</a>.
 
-<h3>Aihe-alueet</h3>
+<h3>Aihealueet</h3>
 {% for topic in topics %}
 <h4>{{ topic.name }}</h4>
 {{ topic.tcount }} ketjua, joissa {{ topic.mcount }} vastausta.
@@ -23,21 +23,21 @@ Viimeisin viesti lähetetty {{ topic.mlatest.strftime("%Y.%m.%d, %H:%M:%S") }}
 {% endif %}
 {% endif %}
 <br>
-<a href="{{ url_for('open_topic',topic_name=topic.name) }}">Siirry aiheeseen</a>
+<a class="button" href="{{ url_for('open_topic',topic_name=topic.name) }}">Siirry aiheeseen</a>
 {% if session.admin_role %}
-<a href="{{ url_for('delete_topic', topic_id=topic.id) }}">Poista aihe</a>
+<a class="button" href="{{ url_for('delete_topic', topic_id=topic.id) }}">Poista aihe</a>
 {% endif %}
 <hr>
 {% endfor %}
 {% if session.admin_role %}
+<h3>Uusi aihe</h3>
 <form action="{{ url_for('index') }}" method="POST">
-<input type="text" name="new_topic_name">
-<div class="checkbox_on_line">
+<label for="new_topic_name">Aiheen nimi</label>
+<input type="text" id="new_topic_name" name="new_topic_name" maxlength="30">
 <label for="limited_access">Rajoitettu pääsy</label>
-<input type="checkbox" id="limited_access" name="limited_access" value="True">
-</div>
+<input class="button" type="checkbox" id="limited_access" name="limited_access" value="True">
 <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-<input type="submit" value="Lisää aihe">
+<input class="button" type="submit" value="Lisää aihe">
 </form>
 {% endif %}
 

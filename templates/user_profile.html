@@ -7,62 +7,59 @@
 
 {% if session.admin_role %}
     {% if user.admin_role %}
-        <a href="{{ url_for('revoke_admin_role', user_id=user.id)}}">Poista ylläpito-oikeudet</a>
+        <a class="button" href="{{ url_for('revoke_admin_role', user_id=user.id)}}">Poista ylläpito-oikeudet</a>
     {% else %}
-        <a href="{{ url_for('grant_admin_role', user_id=user.id) }}">Anna ylläpito-oikeudet</a>
+        <a class="button" href="{{ url_for('grant_admin_role', user_id=user.id) }}">Anna ylläpito-oikeudet</a>
     {% endif %}
     {% if user.banned %}
-        <a href="{{ url_for('unban_user', user_id=user.id) }}">Poista julkaisukielto</a>
+        <a class="button" href="{{ url_for('unban_user', user_id=user.id) }}">Poista julkaisukielto</a>
     {% else %}
-        <a href="{{ url_for('ban_user', user_id=user.id) }}">Aseta julkaisukielto</a>
+        <a class="button" href="{{ url_for('ban_user', user_id=user.id) }}">Aseta julkaisukielto</a>
         {% endif %}
+    <p>Aihealueet, joihin käyttäjällä on pääsy:</p>
     <form id="access_right_form" action="{{ url_for('update_access_rights', user_id=user.id) }}" method="post">
         {% for topic in topics %}
-        <div class="checkbox_on_line">
             <label for="{{ topic.id }}">{{ topic.name }}</label>
             {% if topic.id in access_rights %}
                 <input type="checkbox" id="{{ topic.id }}" name="{{ topic.id }}" value="True" checked>
             {% else %}
                 <input type="checkbox" id="{{ topic.id }}" name="{{ topic.id }}" value="True">
             {% endif %}
-        </div>
         {% endfor %}
-        <input type="submit" value="Päivitä oikeudet">
+        <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+        <input class="button" type="submit" value="Päivitä oikeudet">
     </form>
-    <br>
 {% endif %}
 
 {% if not user_blocked %}
     {% if session.user_id == user.id %}
-        Oma käyttäjäsi
-        <br>
+        <p>Oma käyttäjäsi</p>
         {% if user.public %}
-            <a href="{{ url_for('user_make_private', user_id=user.id) }}">Tee käyttäjästä yksityinen</a>
+            <a class="button" href="{{ url_for('user_make_private', user_id=user.id) }}">Tee käyttäjästä yksityinen</a>
         {% else %}
-            <a href="{{ url_for('user_make_public', user_id=user.id) }}">Tee käyttäjästä julkinen</a>
+            <a class="button" href="{{ url_for('user_make_public', user_id=user.id) }}">Tee käyttäjästä julkinen</a>
         {% endif %}
     {% elif not session.user_id %}
-        Kirjaudu sisään lisätäksesi kavereita
+        <p>Kirjaudu sisään lisätäksesi kavereita</p>
     {% else %}
         {% if blocked_by_user %}
-            Et voi lähettää tälle käyttäjälle kaveripyyntöä
+            <p>Et voi lähettää tälle käyttäjälle kaveripyyntöä</p>
         {% elif friend_request_sent %}
             {% if friend_request_received %}
-                <a href="{{ url_for('remove_friend', user_id=user.id) }}">Poista kavereista</a>
+                <a class="button" href="{{ url_for('remove_friend', user_id=user.id) }}">Poista kavereista</a>
             {% else %}
-                <a href="{{ url_for('remove_friend', user_id=user.id) }}">Peru kaveripyyntö</a>
+                <a class="button" href="{{ url_for('remove_friend', user_id=user.id) }}">Peru kaveripyyntö</a>
             {% endif %}
         {% elif friend_request_received %}
-            <a href="{{ url_for('add_friend', user_id=user.id) }}">Hyväksy kaveripyyntö</a>
+            <a class="button" href="{{ url_for('add_friend', user_id=user.id) }}">Hyväksy kaveripyyntö</a>
         {% else %}
-            <a href="{{ url_for('add_friend', user_id=user.id) }}">Lähetä kaveripyyntö</a>
+            <a class="button" href="{{ url_for('add_friend', user_id=user.id) }}">Lähetä kaveripyyntö</a>
         {% endif %}
-        <a href="{{ url_for('block_user', user_id=user.id) }}">Estä käyttäjä</a>
+        <a class="button" href="{{ url_for('block_user', user_id=user.id) }}">Estä käyttäjä</a>
     {% endif %}
 {% else %}
-    <a href="{{ url_for('unblock_user', user_id=user.id) }}">Poista esto</a>
+    <a class="button" href="{{ url_for('unblock_user', user_id=user.id) }}">Poista esto</a>
 {% endif %}
-<br>
 
 {% if not restricted_view or session.user_id == user.id %}
 <p>{{ user.bio }}</p>
@@ -70,7 +67,7 @@
 <p>Käyttäjätili on yksityinen</p>
 {% endif %}
 {%if session.admin_role or session.user_id == user.id %}
-<a href="{{ url_for('edit_bio', user_id=user.id) }}">Muokkaa kuvausta</a>
+<a class="button" href="{{ url_for('edit_bio', user_id=user.id) }}">Muokkaa kuvausta</a>
 {% endif %}
 
 {% endblock %}
