@@ -108,7 +108,10 @@ def get_access_rights(user_id):
         return []
     sql = text("SELECT topic_id FROM accesses WHERE user_id=:user_id")
     result = db.session.execute(sql, {"user_id":user_id})
-    return [i[0] for i in result.fetchall()]
+    accesses = result.fetchall()
+    if len(accesses) == 0:
+        return [0]
+    return [i[0] for i in accesses]
 
 def check_access_rights(topic_id):
     if topic_id in session.get("access_rights"):
@@ -167,3 +170,4 @@ def logout():
     del session["admin_role"]
     del session["access_rights"]
     del session["csrf_token"]
+    del session["banned"]

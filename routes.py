@@ -28,7 +28,7 @@ def open_topic(topic_name):
     #check user topic access rights
     if topic.limited_access:
         if not users.check_admin_role():
-            if not users.check_access_rights(topic.id):
+            if not users.user_id() or not users.check_access_rights(topic.id):
                 return render_template("error.html", error_message="Ei lupaa käyttää resurssia")
     blocks = users.get_blocks(users.user_id())
     if request.method == "GET":
@@ -147,7 +147,7 @@ def edit_message(message_id):
         if len(edited_message_content) == 0:
                 return render_template("error.html", error_message="Viesti ei voi olla tyhjä")
         discussion.edit_message(message.id, edited_message_content)
-        return redirect(url_for("open_thread", thread_id=message.thread_id, topic_name=topic_name))
+        return redirect(url_for("open_thread", thread_id=message.thread_id, topic_name=topic_name, _anchor=str(message.id)))
     
 @app.route("/edit/bio/<int:user_id>", methods=["GET", "POST"])
 def edit_bio(user_id):
