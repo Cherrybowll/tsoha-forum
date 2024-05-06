@@ -11,23 +11,36 @@ Valitse aihealue alta tai siirry
 
 <h3>Aihealueet</h3>
 {% for topic in topics %}
+<div id="{{ topic.id }}">
 <h4>{{ topic.name }}</h4>
-{{ topic.tcount }} ketjua, joissa {{ topic.mcount }} vastausta.
-<br>
+<p>{{ topic.tcount }} ketjua, joissa {{ topic.mcount }} vastausta.</p>
 {% if topic.tlatest %}
-Viimeisin ketju luotu {{ topic.tlatest.strftime("%Y.%m.%d, %H:%M:%S") }}
-<br>
+<p>
+Viimeisin ketju luotu {{ topic.tlatest.strftime("%Y.%m.%d, %H:%M:%S") }}<br>
 {% if topic.mlatest %}
 Viimeisin viesti lähetetty {{ topic.mlatest.strftime("%Y.%m.%d, %H:%M:%S") }}
-<br>
+</p>
 {% endif %}
 {% endif %}
 <br>
+{% if topic.limited_access and not session.admin_role %}
+    {% if session.access_rights %}
+        {% if topic.id in session.access_rights %}
+        <a class="button" href="{{ url_for('open_topic',topic_name=topic.name) }}">Siirry aiheeseen</a>
+        {% else %}
+        <p>Rajoitettu aihe. Käyttäjälläsi ei ole riittäviä oikeuksia.</p>
+        {% endif %}
+    {% else %}
+    <p>Rajoitettu aihe. Jos sinulla on riittävät oikeudet, kirjaudu sisään.</p>
+    {% endif %}
+{% else %}
 <a class="button" href="{{ url_for('open_topic',topic_name=topic.name) }}">Siirry aiheeseen</a>
+{% endif %}
 {% if session.admin_role %}
 <a class="button" href="{{ url_for('delete_topic', topic_id=topic.id) }}">Poista aihe</a>
 {% endif %}
 <hr>
+</div>
 {% endfor %}
 {% if session.admin_role %}
 <h3>Uusi aihe</h3>

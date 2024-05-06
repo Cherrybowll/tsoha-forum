@@ -9,7 +9,7 @@
     <label for="edited_bio">Kuvaus</label>
     <textarea id="edited_bio" name="edited_bio" value="{{ user.bio }}" maxlength="2000" rows="4" cols="50"></textarea>
     <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-    <input class="button" type="submit" value="Päivitä kuvaus">
+    <input class="button" type="submit" value="Tallenna">
 </form>
 
 {% endblock %}

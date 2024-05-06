@@ -4,9 +4,10 @@
 {% block content %}
 
 <h2>{{ topic.name }}</h2>
-<a class="button" href="{{ url_for('index') }}">Palaa etusivulle</a>
+<a class="button" href="{{ url_for('index', _anchor=topic.id|string) }}">Palaa etusivulle</a>
 <hr>
 {% for thread in threads %}
+<div id="{{ thread.id }}">
 <h3>{{ thread.subject }}</h3>
 <a href="{{ url_for('user_profile', user_id=thread.creator_id) }}"><b>{{ thread.creator_name }}</b></a>
 | {{ thread.created_at.strftime("%d.%m.%Y, %H:%M:%S") }}
@@ -26,10 +27,11 @@ Viestejä: {{ thread.mcount }}
 <a class="button" href="{{ url_for('delete_thread', thread_id=thread.id) }}">Poista ketju</a>
 {% endif %}
 <hr>
+</div>
 {% endfor %}
+<h3>Uusi ketju</h3>
 {% if session.user_id %}
 {% if not session.banned %}
-<h3>Uusi ketju</h3>
 <form action="{{ url_for('open_topic', topic_name=topic.name) }}" method="post">
 <label for="new_thread_subject">Otsikko</label>
 <input type="text" id="new_thread_subject" name="new_thread_subject" maxlength="100">
@@ -41,6 +43,8 @@ Viestejä: {{ thread.mcount }}
 {% else %}
 <p>Olet julkaisukiellossa. Et voi tehdä ketjuja.</p>
 {% endif %}
+{% else %}
+<p>Kirjaudu sisään tehdäksesi uuden ketjun.</p>
 {% endif %}
 
 {% endblock %}

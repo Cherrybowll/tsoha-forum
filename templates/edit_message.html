@@ -5,9 +5,10 @@
 
 <h2>Muokkaa viestin sisältöä</h2>
 <form action="{{ url_for('edit_message', message_id=message.id) }}" method="post">
-<input type="text" id="edited_message_content" name="edited_message_content" value="{{ message.content }}" maxlength="500">
+<label for="edited_message_content">Viesti</label>
+<textarea id="edited_message_content" name="edited_message_content" maxlength="500" rows="4" cols="50">{{ message.content }}</textarea>
 <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-<input class="button" type="submit" value="Tallenna muutokset">
+<input class="button" type="submit" value="Tallenna">
 </form>
 
 {% endblock %}

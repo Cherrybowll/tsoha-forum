@@ -8,9 +8,9 @@
 <label for="edited_thread_subject">Otsikko</label>
 <input type="text" id="edited_thread_subject" name="edited_thread_subject" value="{{ thread.subject }}" maxlength="100">
 <label for="edited_thread_content">Sisältö</label>
-<input type="text" id="edited_thread_content" name="edited_thread_content" value="{{ thread.content }}" maxlength="500">
+<textarea id="edited_thread_content" name="edited_thread_content" maxlength="500" rows="4" cols="50">{{ thread.content }}</textarea>
 <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-<input class="button" type="submit" value="Tallenna muutokset">
+<input class="button" type="submit" value="Tallenna">
 </form>
 
 {% endblock %}
