@@ -28,9 +28,9 @@ flask run
 UPDATE users SET admin_role=TRUE WHERE name='[käyttäjänimi]';
 ```
 
-Sovelluksessa on nyt toteutettuna (ja kaiken pitäisi toimia suhteellisen asiallisesti):
+Sovelluksessa on nyt toteutettuna (ja kaiken pitäisi toimia suhteellisen asiallisesti) seuraavat ominaisuudet:
 - Käyttäjätunnusten rekisteröinti sekä sisään- ja uloskirjautuminen
-- Varsinainen keskustelualue hiearkisella aihe>lanka>viesti-rakenteella
+- Varsinainen keskustelualue hiearkisella aihe>ketju>viesti-rakenteella
   - Aiheiden luonti ja piilottaminen (ylläpitäjille)
   - Rajoitetut aiheet ja pääsyoikeuksien hallinta (ylläpitäjille)
   - Ketjujen ja viestien julkaiseminen, poistaminen ja muokkaaminen (käyttäjille)
