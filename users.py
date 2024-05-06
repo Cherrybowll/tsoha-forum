@@ -10,6 +10,9 @@ def user_id():
 def csrf_token():
     return session.get("csrf_token")
 
+def banned():
+    return session.get("banned", 0)
+
 def check_admin_role():
     return session.get("admin_role", 0)
 
@@ -126,7 +129,7 @@ def grant_access_rights(user_id, topic_id_list):
     return
 
 def login(username, password):
-    sql = text("SELECT id, name, password, admin_role FROM users WHERE name=:username")
+    sql = text("SELECT id, name, password, admin_role, banned FROM users WHERE name=:username")
     result = db.session.execute(sql, {"username":username})
     user = result.fetchone()
     if not user:
@@ -137,6 +140,7 @@ def login(username, password):
         session["admin_role"] = user.admin_role
         session["access_rights"] = get_access_rights(user_id())
         session["csrf_token"] = secrets.token_hex(16)
+        session["banned"] = user.banned
         print(session.get("access_rights"))
         return True
     return False

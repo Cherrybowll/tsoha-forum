@@ -38,6 +38,8 @@ def open_topic(topic_name):
         new_thread_content = request.form["new_thread_content"]
         if users.csrf_token() != request.form["csrf_token"]:
             abort(403)
+        if users.banned():
+            return render_template("error.html", error_message="Sinulle on asetettu julkaisukielto")
         if len(new_thread_subject) == 0:
                 return render_template("error.html", error_message="Ketjun nimi ei voi olla tyhjä")
         discussion.add_thread(new_thread_subject, new_thread_content, users.user_id(), topic.id)
@@ -63,6 +65,8 @@ def open_thread(thread_id, topic_name):
         new_message_content = request.form["new_message"]
         if users.csrf_token() != request.form["csrf_token"]:
             abort(403)
+        if users.banned():
+            return render_template("error.html", error_message="Sinulle on asetettu julkaisukielto")
         if len(new_message_content) == 0:
                 return render_template("error.html", error_message="Viesti ei voi olla tyhjä")
         discussion.add_message(new_message_content, users.user_id(), thread.id, topic.id)

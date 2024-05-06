@@ -28,6 +28,7 @@ Viestejä: {{ thread.mcount }}
 <hr>
 {% endfor %}
 {% if session.user_id %}
+{% if not session.banned %}
 <h3>Uusi ketju</h3>
 <form action="{{ url_for('open_topic', topic_name=topic.name) }}" method="post">
 <label for="new_thread_subject">Otsikko</label>
@@ -37,6 +38,9 @@ Viestejä: {{ thread.mcount }}
 <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 <input class="button" type="submit" value="Lisää ketju">
 </form>
+{% else %}
+<p>Olet julkaisukiellossa. Et voi tehdä ketjuja.</p>
+{% endif %}
 {% endif %}
 
 {% endblock %}
