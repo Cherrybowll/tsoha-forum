@@ -40,9 +40,9 @@ Sovelluksessa on nyt toteutettuna (ja kaiken pitäisi toimia suhteellisen asiall
 - Käyttäjien profiilisivut
   - Muokattava kuvaus
   - Käyttäjän yksityisyys (=kuvauksen näkyvyys)
-- Käyttäjien estäminen (estää kaveriksi lisäämisen ja piilottaa viestien/lankojen sisällön näkymästä)
+- Käyttäjien estäminen (estää kaveriksi lisäämisen ja piilottaa viestien/ketjujen sisällön näkymästä)
 - Käyttäjien lisääminen kavereiksi (kuvaus näkyy kavereille, mikäli yksityinen käyttäjä)
-- Käyttäjien bannaaminen (ketjut/viestit eivät enää näy keskustelualueella tai haussa). Osuvampi nimitys olisi ehkä mute, mutta en jaksa muuttaa
+- Käyttäjien bannaaminen/julkaisukielto (ketjut/viestit eivät enää näy keskustelualueella tai haussa). Osuvampi nimitys olisi ehkä mute, mutta en jaksa muuttaa
 - Käyttäjien ylentäminen ylläpitäjiksi ja ylläpito-oikeuksien poistaminen
 - Hyvin karkea ulkoasu
 
