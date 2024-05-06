@@ -59,7 +59,7 @@ def add_thread(subject, content, creator_id, topic_id):
     return
 
 def add_topic(name, limited_access):
-    name = name[:100]
+    name = name[:30]
     sql = text("INSERT INTO topics (name, limited_access) VALUES (:name, :limited_access)")
     db.session.execute(sql, {"name":name, "limited_access":limited_access})
     db.session.commit()
