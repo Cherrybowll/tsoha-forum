@@ -3,7 +3,14 @@
 {% block title %}Käyttäjän {{ user.name }} profiili{% endblock %}
 {% block content %}
 
-<p>Käyttäjän <b>{{ user.name }}</b> profiili.</p>
+<h2>Käyttäjäsivu</h2>
+
+<p>
+    Käyttäjän <b>{{ user.name }}</b> profiili.
+    {% if not restricted_view or session.user_id == user.id %}
+    Käyttäjänä {{ user.created_at.strftime("%d.%m.%Y") }} alkaen.
+    {% endif %}
+</p>
 
 {% if session.admin_role %}
     {% if user.admin_role %}
@@ -62,9 +69,10 @@
 {% endif %}
 
 {% if not restricted_view or session.user_id == user.id %}
+<h3>Tietoa käyttäjästä</h3>
 <p>{{ user.bio }}</p>
 {% else %}
-<p>Käyttäjätili on yksityinen</p>
+<p>Käyttäjätili on yksityinen.</p>
 {% endif %}
 {%if session.admin_role or session.user_id == user.id %}
 <a class="button" href="{{ url_for('edit_bio', user_id=user.id) }}">Muokkaa kuvausta</a>

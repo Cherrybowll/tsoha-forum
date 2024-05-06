@@ -119,6 +119,7 @@ def search_threads(keyword, date_max, date_min):
     return result.fetchall()
 
 def edit_bio(user_id, bio):
+    bio = bio[:2000]
     sql = text("UPDATE users SET bio=:bio WHERE id=:user_id")
     db.session.execute(sql, {"bio":bio, "user_id":user_id})
     db.session.commit()
