@@ -12,11 +12,11 @@
 <input type="password" id="password1" name="password1">
 <label for="password2">Salasana uudestaan</label>
 <input type="password" id="password2" name="password2">
-<input type="submit" value="Rekisteröidy">
+<input class="button" type="submit" value="Rekisteröidy">
 </form>
 
 {% if error_message %}
-{{ error_message }}
+<p>{{ error_message }}.</p>
 {% endif %}
 
 {% endblock %}

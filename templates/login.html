@@ -9,11 +9,11 @@
 <input type="text" id="username" name="username" value="{{ username }}">
 <label for="password">Salasana</label>
 <input type="password" id="password" name="password">
-<input type="submit" value="Kirjaudu sisään">
+<input class="button" type="submit" value="Kirjaudu sisään">
 </form>
 
 {% if error_message %}
-{{ error_message }}
+<p></p>{{ error_message }}.</p>
 {% endif %}
 
 {% endblock %}

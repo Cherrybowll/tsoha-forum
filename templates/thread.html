@@ -39,7 +39,7 @@
 <h3>Uusi viesti</h3>
 <form action="{{ url_for('open_thread', thread_id=thread.id, topic_name=topic.name, _anchor='end_of_page') }}" method="post" id="end_of_page">
 <label for="new_message">Uusi viesti</label>
-<input type="text" id="new_message" name="new_message" maxlength="500">
+<textarea id="new_message" name="new_message" maxlength="500" rows="4" cols="50"></textarea>
 <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 <input class="button" type="submit" value="Lähetä viesti">
 </form>

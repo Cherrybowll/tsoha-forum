@@ -33,7 +33,7 @@ Viestejä: {{ thread.mcount }}
 <label for="new_thread_subject">Otsikko</label>
 <input type="text" id="new_thread_subject" name="new_thread_subject" maxlength="100">
 <label for="new_thread_content">Viesti</label>
-<input type="text" id="new_thread_content" name="new_thread_content" maxlength="500">
+<textarea id="new_thread_content" name="new_thread_content" maxlength="500" rows="4" cols="50"></textarea>
 <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 <input class="button" type="submit" value="Lisää ketju">
 </form>
